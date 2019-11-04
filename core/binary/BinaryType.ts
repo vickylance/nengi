@@ -1,13 +1,4 @@
-function createEnum(values) {
-  var enumm = {};
-  for (var i = 0; i < values.length; i++) {
-    var value = values[i];
-    enumm[value] = i;
-  }
-  return enumm;
-}
-
-var BinaryType = createEnum([
+enum BinaryType {
   'Null',
   'Boolean',
 
@@ -41,6 +32,6 @@ var BinaryType = createEnum([
   'UTF8String',
   'RGB888',
   'RotationFloat32'
-]);
+}
 
 export default BinaryType;

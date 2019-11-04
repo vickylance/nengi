@@ -27,6 +27,9 @@
         "utf8": "^3.0.0"
     },
     "devDependencies": {
-        "jasmine": "^3.5.0"
+        "@types/node": "^12.12.5",
+        "jasmine": "^3.5.0",
+        "tslint": "^6.0.0-beta0",
+        "typescript": "^3.6.4"
     }
 }

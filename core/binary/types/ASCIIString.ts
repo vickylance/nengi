@@ -59,7 +59,7 @@ var ASCIIString = {
   read: read
 };
 
-ASCIIString.compare = function(a: number, b: number) {
+ASCIIString.compare = function(a: string, b: string) {
   return {
     a: a,
     b: b,
