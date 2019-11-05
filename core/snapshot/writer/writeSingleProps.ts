@@ -11,7 +11,7 @@ function writeSingleProps(chunkType, bitStream, singleProps) {
     // number of entities
     bitStream[Binary[BinaryType.UInt16].write](singleProps.length);
 
-    for (var i = 0; i < singleProps.length; i++) {
+    for (let i = 0; i < singleProps.length; i++) {
       writePartial(bitStream, singleProps[i]);
     }
 

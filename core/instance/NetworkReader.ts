@@ -35,29 +35,29 @@ Reader.prototype.unregisterSchema = function(id) {
 Reader.prototype.read = function(bitBuffer) {
   console.log('READING BUFFER');
 
-  var snapshot = {
+  const snapshot = {
     createEntities: [],
     updateEntities: [],
     deleteEntities: []
   };
 
-  var bitStream = new BitStream(bitBuffer);
+  const bitStream = new BitStream(bitBuffer);
   while (bitStream.offset < bitStream.bitBuffer.bitLength) {
-    var msgType = bitStream[Binary[chunkType].read]();
+    const msgType = bitStream[Binary[chunkType].read]();
     switch (msgType) {
       case Chunk.CreateEntities:
-        var length = bitStream.readUInt8();
+        let length = bitStream.readUInt8();
         console.log('CreateEntities', length);
-        for (var i = 0; i < length; i++) {
-          var type = bitStream[Binary[this.instance.config.TYPE_BINARY_TYPE].read]();
-          var schema = this.instance.schemas.entity.getSchema(type);
-          //console.log('get schema by type', type)
-          //console.log('schema foound', schema)
-          var proxy = read(bitStream, schema, 1, type, this.instance.config.TYPE_PROPERTY_NAME);
-          //console.log('prox', proxy)
-          var entity = deproxify(proxy, schema);
+        for (let i = 0; i < length; i++) {
+          const type = bitStream[Binary[this.instance.config.TYPE_BINARY_TYPE].read]();
+          const schema = this.instance.schemas.entity.getSchema(type);
+          // console.log('get schema by type', type)
+          // console.log('schema foound', schema)
+          const proxy = read(bitStream, schema, 1, type, this.instance.config.TYPE_PROPERTY_NAME);
+          // console.log('prox', proxy)
+          const entity = deproxify(proxy, schema);
           console.log('ent', entity);
-          var id = entity[this.instance.config.ID_PROPERTY_NAME];
+          const id = entity[this.instance.config.ID_PROPERTY_NAME];
           entity.protocol = schema;
           snapshot.createEntities.push(entity);
           this.registerSchema(id, schema);
@@ -66,10 +66,10 @@ Reader.prototype.read = function(bitBuffer) {
         break;
 
       case Chunk.DeleteEntities:
-        var length = bitStream.readUInt8();
+        let length = bitStream.readUInt8();
         console.log('DeleteEntities', length);
-        for (var i = 0; i < length; i++) {
-          var id = bitStream[Binary[this.instance.config.ID_BINARY_TYPE].read]();
+        for (let i = 0; i < length; i++) {
+          const id = bitStream[Binary[this.instance.config.ID_BINARY_TYPE].read]();
           snapshot.deleteEntities.push(id);
           this.unregisterSchema(id);
           this.entityCache.forgetEntity(id);
@@ -78,15 +78,15 @@ Reader.prototype.read = function(bitBuffer) {
         break;
 
       case Chunk.UpdateEntitiesPartial:
-        var length = bitStream.readUInt8();
+        let length = bitStream.readUInt8();
         console.log('UpdateEntitiesPartial', length);
-        for (var i = 0; i < length; i++) {
-          var id = bitStream[Binary[this.instance.config.ID_BINARY_TYPE].read]();
-          var schema = this.getSchemaByEntityId(id);
-          var update = readPartial(bitStream, schema);
+        for (let i = 0; i < length; i++) {
+          const id = bitStream[Binary[this.instance.config.ID_BINARY_TYPE].read]();
+          const schema = this.getSchemaByEntityId(id);
+          const update = readPartial(bitStream, schema);
           this.entityCache.updateEntityPartial(id, update.prop, update.value);
           snapshot.updateEntities.push({
-            id: id,
+            id,
             prop: update.prop,
             value: update.value
           });
@@ -94,19 +94,19 @@ Reader.prototype.read = function(bitBuffer) {
         break;
 
       case Chunk.UpdateEntitiesOptimized:
-        var length = bitStream.readUInt8();
+        const length = bitStream.readUInt8();
         console.log('UpdateEntitiesOptimized', length);
-        for (var i = 0; i < length; i++) {
-          var id = bitStream[Binary[this.instance.config.ID_BINARY_TYPE].read]();
+        for (let i = 0; i < length; i++) {
+          const id = bitStream[Binary[this.instance.config.ID_BINARY_TYPE].read]();
 
-          var schema = this.getSchemaByEntityId(id);
-          var entity = this.entityCache.getEntity(id);
-          //console.log('optimizating for', entity)
-          var updates = readOptimized(bitStream, entity.protocol);
-          //console.log('read optimized', temp)
+          const schema = this.getSchemaByEntityId(id);
+          const entity = this.entityCache.getEntity(id);
+          // console.log('optimizating for', entity)
+          const updates = readOptimized(bitStream, entity.protocol);
+          // console.log('read optimized', temp)
           updates.forEach(update => {
             snapshot.updateEntities.push({
-              id: id,
+              id,
               prop: update.prop,
               value: entity[update.prop] + update.deltaValue
             });
@@ -122,7 +122,7 @@ Reader.prototype.read = function(bitBuffer) {
 
   console.log('CLIENT snapshot', snapshot);
 
-  //this.state.processSnapshot(snapshot)
+  // this.state.processSnapshot(snapshot)
 };
 
 export default Reader;

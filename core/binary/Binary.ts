@@ -33,7 +33,7 @@ import RGB888 from './types/RGB888';
 import ASCIIString from './types/ASCIIString';
 import UTF8String from './types/UTF8String';
 
-var Binary = {};
+const Binary = {};
 
 /* unsigned! 0 to n */
 // 0 to 1, false or true
@@ -95,11 +95,11 @@ Binary[BinaryType.ASCIIString] = ASCIIString;
 // utf8 strings, potentially huge
 Binary[BinaryType.UTF8String] = UTF8String;
 
-Binary.countBits = function(propConfig, value) {
-  var binaryMeta = Binary[propConfig.type];
+Binary.countBits = (propConfig, value) => {
+  const binaryMeta = Binary[propConfig.type];
   if (propConfig.isArray) {
-    var totalBits = 0;
-    var arrayIndexBinaryMeta = Binary[propConfig.arrayIndexBinaryType];
+    let totalBits = 0;
+    const arrayIndexBinaryMeta = Binary[propConfig.arrayIndexBinaryType];
     totalBits += arrayIndexBinaryMeta.bits;
     if (binaryMeta.customBits) {
       totalBits += binaryMeta.countBits(value) * value.length;

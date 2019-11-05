@@ -1,18 +1,18 @@
 import Binary from '../../binary/Binary';
 
-var readProp = function(bitStream, type, arrayIndexType) {
-  var binaryMeta = Binary[type];
+const readProp = function(bitStream, type, arrayIndexType) {
+  const binaryMeta = Binary[type];
   if (typeof arrayIndexType === 'number') {
-    var arrayIndexMeta = Binary[arrayIndexType];
-    var length = bitStream[arrayIndexMeta.read]();
+    const arrayIndexMeta = Binary[arrayIndexType];
+    const length = bitStream[arrayIndexMeta.read]();
 
-    var arr = [];
-    for (var i = 0; i < length; i++) {
+    const arr = [];
+    for (let i = 0; i < length; i++) {
       if (binaryMeta.customRead) {
-        var value = binaryMeta.read(bitStream);
+        const value = binaryMeta.read(bitStream);
         arr.push(value);
       } else {
-        var value = bitStream[binaryMeta.read]();
+        const value = bitStream[binaryMeta.read]();
         arr.push(value);
       }
     }

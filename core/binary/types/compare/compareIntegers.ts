@@ -1,6 +1,6 @@
 export default function compareIntegers(a: number, b: number) {
-  var intA = Math.floor(a);
-  var intB = Math.floor(b);
+  const intA = Math.floor(a);
+  const intB = Math.floor(b);
   return {
     a: intA,
     b: intB,

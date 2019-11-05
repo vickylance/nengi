@@ -5,7 +5,7 @@
  */
 import compareInts from './compare/compareIntegers';
 
-var UInt32 = {
+const UInt32 = {
   min: 0,
   max: 4294967295,
   bits: 32,

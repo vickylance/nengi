@@ -3,11 +3,11 @@ import Binary from '../../binary/Binary';
 import readBatch from '../../protocol/read/readBatch';
 
 function readBatches(bitStream, entityCache) {
-  var length = bitStream[Binary[BinaryType.UInt16].read]();
+  const length = bitStream[Binary[BinaryType.UInt16].read]();
 
-  var batches = [];
-  for (var i = 0; i < length; i++) {
-    var batch = readBatch(bitStream, entityCache);
+  const batches = [];
+  for (let i = 0; i < length; i++) {
+    const batch = readBatch(bitStream, entityCache);
     batches.push(batch);
   }
   return batches;

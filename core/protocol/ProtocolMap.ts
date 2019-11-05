@@ -14,7 +14,7 @@ function ProtocolMap(config, metaConfig) {
   this.lookupByProtocol = new Map();
   this.protocolIndex = 0;
 
-  //this.processProtocols(meta, config, )
+  // this.processProtocols(meta, config, )
 
   this.lookupMetaByIndex = new Map();
   this.lookupMetaByProtocol = new Map();
@@ -30,38 +30,38 @@ function ProtocolMap(config, metaConfig) {
 }
 
 ProtocolMap.prototype.processMeta = function(config, metaConfig, configSection) {
-  for (var i = 0; i < metaConfig[configSection].length; i++) {
-    var name = metaConfig[configSection][i][0];
-    var protocolConfig = metaConfig[configSection][i][1];
-    var type = metaConfig[configSection][i][2];
+  for (let i = 0; i < metaConfig[configSection].length; i++) {
+    const name = metaConfig[configSection][i][0];
+    const protocolConfig = metaConfig[configSection][i][1];
+    const type = metaConfig[configSection][i][2];
 
-    var protocol = new MessageProtocol(protocolConfig, config);
+    const protocol = new MessageProtocol(protocolConfig, config);
     this.lookupMetaByIndex.set(type, protocol);
     this.lookupMetaByProtocol.set(protocol, type);
     protocol.name = name;
 
-    //console.log('protocol', protocol)
+    // console.log('protocol', protocol)
   }
 };
 
 ProtocolMap.prototype.processProtocols = function(config, configSection, protocolConstructor) {
-  let section = config.protocols[configSection];
+  const section = config.protocols[configSection];
   if (!section) {
     return;
   }
-  for (var i = 0; i < section.length; i++) {
-    let entry = section[i];
+  for (let i = 0; i < section.length; i++) {
+    const entry = section[i];
     if (Array.isArray(entry)) {
-      var name = entry[0];
-      var ctor = entry[1];
+      const name = entry[0];
+      const ctor = entry[1];
       if (entry.length === 2) {
-        //if (debug(configSection, name)) {
-        //	console.log('ctor mode', name)
-        //}
+        // if (debug(configSection, name)) {
+        // 	console.log('ctor mode', name)
+        // }
 
         // nengi beta Constructor mode
-        var protocolConfig = ctor.protocol;
-        var protocol = new protocolConstructor(protocolConfig, config);
+        const protocolConfig = ctor.protocol;
+        const protocol = new protocolConstructor(protocolConfig, config);
         this.lookupByIndex.set(this.protocolIndex, protocol);
         this.lookupByProtocol.set(protocol, this.protocolIndex);
         // mutates prototype
@@ -69,32 +69,32 @@ ProtocolMap.prototype.processProtocols = function(config, configSection, protoco
         // mutates protocol, adding a name
         protocol.name = name;
         this.protocolIndex++;
-        //if (debug(configSection, name)) {
-        //	console.log(protocol)
-        //}
+        // if (debug(configSection, name)) {
+        // 	console.log(protocol)
+        // }
 
-        //console.log(name, this.protocolIndex)
+        // console.log(name, this.protocolIndex)
       } else {
-        //console.log('factory mode')
+        // console.log('factory mode')
         // nengi beta factory mode
-        var protocolConfig = entry[2];
-        var type = entry[3];
-        var protocol = new protocolConstructor(protocolConfig, config);
+        const protocolConfig = entry[2];
+        const type = entry[3];
+        const protocol = new protocolConstructor(protocolConfig, config);
         this.lookupByIndex.set(type, protocol);
         this.lookupByProtocol.set(protocol, type);
         protocol.name = name;
       }
     } else {
       // new syntax mode
-      //console.log('new syntax')
+      // console.log('new syntax')
       if (configSection === 'components') {
-        let protocol = new ComponentProtocol(entry.protocol, config, entry.components);
+        const protocol = new ComponentProtocol(entry.protocol, config, entry.components);
         this.lookupByIndex.set(entry[config.TYPE_PROPERTY_NAME], protocol);
         this.lookupByProtocol.set(protocol, entry[config.TYPE_PROPERTY_NAME]);
         protocol.name = entry.name;
       }
       if (configSection === 'entities') {
-        let protocol = new EntityProtocol(entry.protocol, config, entry.components);
+        const protocol = new EntityProtocol(entry.protocol, config, entry.components);
         this.lookupByIndex.set(entry[config.TYPE_PROPERTY_NAME], protocol);
         this.lookupByProtocol.set(protocol, entry[config.TYPE_PROPERTY_NAME]);
         protocol.name = entry.name;

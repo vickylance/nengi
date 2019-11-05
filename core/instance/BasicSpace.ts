@@ -24,17 +24,17 @@ BasicSpace.prototype.flushEvents = function() {
 };
 
 BasicSpace.prototype.queryAreaEMap = function(aabb) {
-  var minX = aabb.x - aabb.halfWidth;
-  var minY = aabb.y - aabb.halfHeight;
-  var maxX = aabb.x + aabb.halfWidth;
-  var maxY = aabb.y + aabb.halfHeight;
+  const minX = aabb.x - aabb.halfWidth;
+  const minY = aabb.y - aabb.halfHeight;
+  const maxX = aabb.x + aabb.halfWidth;
+  const maxY = aabb.y + aabb.halfHeight;
 
-  var entitiesInArea = new Map();
+  const entitiesInArea = new Map();
 
-  var entities = this.entities.toArray();
+  const entities = this.entities.toArray();
 
-  for (var i = 0; i < entities.length; i++) {
-    var entity = entities[i];
+  for (let i = 0; i < entities.length; i++) {
+    const entity = entities[i];
 
     if (entity.x <= maxX && entity.x >= minX && entity.y <= maxY && entity.y >= minY) {
       entitiesInArea.set(entity[this.ID_PROPERTY_NAME], entity);
@@ -44,28 +44,28 @@ BasicSpace.prototype.queryAreaEMap = function(aabb) {
 };
 
 BasicSpace.prototype.queryArea = function(aabb) {
-  var minX = aabb.x - aabb.halfWidth;
-  var minY = aabb.y - aabb.halfHeight;
-  var maxX = aabb.x + aabb.halfWidth;
-  var maxY = aabb.y + aabb.halfHeight;
+  const minX = aabb.x - aabb.halfWidth;
+  const minY = aabb.y - aabb.halfHeight;
+  const maxX = aabb.x + aabb.halfWidth;
+  const maxY = aabb.y + aabb.halfHeight;
 
-  var entitiesInArea = [];
-  var eventsInArea = [];
+  const entitiesInArea = [];
+  const eventsInArea = [];
 
-  var entities = this.entities.toArray();
+  const entities = this.entities.toArray();
 
-  for (var i = 0; i < entities.length; i++) {
-    var entity = entities[i];
+  for (let i = 0; i < entities.length; i++) {
+    const entity = entities[i];
 
     if (entity.x <= maxX && entity.x >= minX && entity.y <= maxY && entity.y >= minY) {
       entitiesInArea.push(entity);
     }
   }
 
-  var events = this.events.toArray();
+  const events = this.events.toArray();
 
-  for (var i = 0; i < events.length; i++) {
-    var event = events[i];
+  for (let i = 0; i < events.length; i++) {
+    const event = events[i];
 
     if (event.x <= maxX && event.x >= minX && event.y <= maxY && event.y >= minY) {
       eventsInArea.push(event);

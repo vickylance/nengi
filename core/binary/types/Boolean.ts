@@ -1,26 +1,28 @@
+const boundsCheck = value => {
+  return typeof value === 'boolean';
+};
+
+const compare = (a: boolean, b: boolean) => {
+  return {
+    a,
+    b,
+    isChanged: a !== b
+  };
+};
+
 /**
  * Definition of a Boolean
  * size is 1 bit
  * uses BitBuffer functions for write/read
  * should never be interpolated (what is halfway between true and false? so esoteric)
  */
-var bool = {
+const bool = {
   bits: 1,
   write: 'writeBoolean',
-  read: 'readBoolean'
-  //'interp': 'never'
-};
-
-bool.boundsCheck = function(value) {
-  return typeof value === 'boolean';
-};
-
-bool.compare = function(a: boolean, b: boolean) {
-  return {
-    a: a,
-    b: b,
-    isChanged: a !== b
-  };
+  read: 'readBoolean',
+  boundsCheck,
+  compare
+  // 'interp': 'never'
 };
 
 export default bool;

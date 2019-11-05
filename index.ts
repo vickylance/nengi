@@ -1,4 +1,4 @@
-var nengi = {
+const nengi = {
   importMode: 'default'
 };
 
@@ -9,8 +9,6 @@ import LocalEventProtocol from './core/protocol/LocalEventProtocol';
 import MessageProtocol from './core/protocol/MessageProtocol';
 import CommandProtocol from './core/protocol/CommandProtocol';
 
-import proxify from './core/protocol/proxify';
-
 // server only
 import Instance from './core/instance/Instance';
 import Channel from './core/instance/Channel';
@@ -20,6 +18,7 @@ import Bot from './core/bot/Bot';
 import Client from './core/client/Client';
 import Interpolator from './core/client/Interpolator';
 
+import proxify from './core/protocol/proxify';
 import ProtocolMap from './core/protocol/ProtocolMap';
 import metaConfig from './core/common/metaConfig';
 
@@ -75,7 +74,7 @@ nengi.ProtocolMap = ProtocolMap;
 nengi.metaConfig = metaConfig;
 
 // browser
-//nengi.Client = Client
-//nengi.Interpolator = Interpolator
+// nengi.Client = Client
+// nengi.Interpolator = Interpolator
 
 export default nengi;

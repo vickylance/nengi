@@ -5,12 +5,12 @@ import BinaryType from '../../binary/BinaryType';
 import Binary from '../../binary/Binary';
 
 function createConnectionReponseBuffer(acceptConnection, text) {
-  var bits = 8;
+  let bits = 8;
   bits += 2;
   bits += Binary[BinaryType.UTF8String].countBits(text);
 
-  var bitBuffer = new BitBuffer(bits);
-  var bitStream = new BitStream(bitBuffer);
+  const bitBuffer = new BitBuffer(bits);
+  const bitStream = new BitStream(bitBuffer);
 
   bitStream[Binary[BinaryType.UInt8].write](Chunk.ConnectionResponse);
   bitStream.writeBoolean(acceptConnection);

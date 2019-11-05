@@ -1,10 +1,10 @@
-//var Grid = require('./Grid')
+// var Grid = require('./Grid')
 import EDictionary from '../../external/EDictionary';
 
 import SpatialStructure from './BasicSpace';
 import proxify from '../protocol/proxify';
 
-var lerp = function(a, b, portion) {
+const lerp = function(a, b, portion) {
   return a + (b - a) * portion;
 };
 
@@ -21,24 +21,24 @@ Historian.prototype.getSnapshot = function(tick) {
     return this.history[tick];
   } else {
     return null;
-    //console.log('historian had no snapshot for tick', tick, 'current tick is', this.tick)
-    //throw new Error('historian had no snapshot for tick', tick, 'current tick is', this.tick)
+    // console.log('historian had no snapshot for tick', tick, 'current tick is', this.tick)
+    // throw new Error('historian had no snapshot for tick', tick, 'current tick is', this.tick)
   }
 };
 
 Historian.prototype.record = function(tick, entities, events, boundary) {
-  //console.log('recording...', entities)
-  var spatialStructure = SpatialStructure.create(this.ID_PROPERTY_NAME);
+  // console.log('recording...', entities)
+  const spatialStructure = SpatialStructure.create(this.ID_PROPERTY_NAME);
 
-  for (var i = 0; i < entities.length; i++) {
-    var entity = entities[i];
+  for (let i = 0; i < entities.length; i++) {
+    const entity = entities[i];
     const proxy = proxify(entity, entity.protocol);
     proxy.ref = entity;
     spatialStructure.insertEntity(proxy);
   }
 
-  for (var i = 0; i < events.length; i++) {
-    var event = events[i];
+  for (let i = 0; i < events.length; i++) {
+    const event = events[i];
     spatialStructure.insertEvent(event);
   }
 
@@ -55,27 +55,27 @@ Historian.prototype.record = function(tick, entities, events, boundary) {
 };
 
 Historian.prototype.getLagCompensatedArea = function(timeAgo, aabb) {
-  //console.log(timeAgo)
-  var tickLengthMs = 1000 / this.tickRate;
-  var ticksAgo = timeAgo / tickLengthMs;
+  // console.log(timeAgo)
+  const tickLengthMs = 1000 / this.tickRate;
+  const ticksAgo = timeAgo / tickLengthMs;
 
-  //console.log('ticks ago', ticksAgo)
+  // console.log('ticks ago', ticksAgo)
 
-  var olderTick = this.tick - Math.floor(ticksAgo);
-  var newerTick = this.tick - Math.floor(ticksAgo) + 1;
-  var portion = (timeAgo % tickLengthMs) / tickLengthMs;
+  const olderTick = this.tick - Math.floor(ticksAgo);
+  const newerTick = this.tick - Math.floor(ticksAgo) + 1;
+  const portion = (timeAgo % tickLengthMs) / tickLengthMs;
 
-  var timesliceA = this.getSnapshot(olderTick);
-  var timesliceB = this.getSnapshot(newerTick);
+  const timesliceA = this.getSnapshot(olderTick);
+  const timesliceB = this.getSnapshot(newerTick);
 
-  var compensatedEntities = [];
+  const compensatedEntities = [];
 
   if (timesliceA && timesliceB) {
-    var entitiesA = timesliceA.queryAreaEMap(aabb);
-    var entitiesB = timesliceB.queryAreaEMap(aabb);
+    const entitiesA = timesliceA.queryAreaEMap(aabb);
+    const entitiesB = timesliceB.queryAreaEMap(aabb);
 
     entitiesA.forEach(entityA => {
-      var entityB = entitiesB.get(entityA[this.ID_PROPERTY_NAME]);
+      const entityB = entitiesB.get(entityA[this.ID_PROPERTY_NAME]);
       // SKIPPING LERP
       compensatedEntities.push(entityA);
 
@@ -101,7 +101,7 @@ Historian.prototype.getCurrentState = function() {
 };
 
 Historian.prototype.getRecentEvents = function() {
-  var spatialStructure = this.getSnapshot(this.tick);
+  const spatialStructure = this.getSnapshot(this.tick);
 };
 
 Historian.prototype.getRecentSnapshot = function() {

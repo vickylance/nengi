@@ -1,10 +1,10 @@
-var b = '\x1b[40m \x1b[0m';
-var w = '\x1b[107m \x1b[0m';
-var g = '\x1b[100m \x1b[0m';
-var l = '\x1b[47m \x1b[0m';
-var r = '\x1b[101m \x1b[0m';
+const b = '\x1b[40m \x1b[0m';
+const w = '\x1b[107m \x1b[0m';
+const g = '\x1b[100m \x1b[0m';
+const l = '\x1b[47m \x1b[0m';
+const r = '\x1b[101m \x1b[0m';
 
-var logo = [
+const logo = [
   [b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b],
   [b, g, w, b, w, w, b, w, w, b, w, w, b, w, g, b],
   [b, w, w, b, w, w, b, w, w, b, w, w, b, w, w, b],
@@ -24,9 +24,9 @@ var logo = [
 ];
 
 export default function() {
-  for (var i = 0; i < logo.length; i++) {
-    var str = '';
-    for (var j = 0; j < logo[i].length; j++) {
+  for (let i = 0; i < logo.length; i++) {
+    let str = '';
+    for (let j = 0; j < logo[i].length; j++) {
       str += logo[i][j];
       str += logo[i][j];
     }

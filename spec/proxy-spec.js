@@ -161,7 +161,6 @@ describe('proxification', function() {
         expect(recreatedObj.array).toEqual(obj.array)
     })
 
-
     /*
     it('of an object containing an array of objects without protocols', function() {
         // TODO: proxify can handle this, but can the rest of the lib?
@@ -264,7 +263,6 @@ describe('proxification', function() {
             string: nengi.ASCIIString,
             foo: { type: Foo, indexType: nengi.UInt8 }
         }, config)
-
 
         var obj = new Obj(
             1234567890, 

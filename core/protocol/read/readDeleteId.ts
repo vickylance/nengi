@@ -1,6 +1,6 @@
 import Binary from '../../binary/Binary';
 
-var readDelete = function(bitStream, idType) {
+const readDelete = function(bitStream, idType) {
   bitStream[Binary[idType].read]();
 };
 

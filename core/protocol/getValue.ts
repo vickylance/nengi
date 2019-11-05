@@ -1,6 +1,6 @@
 export default function getValue(obj, path) {
-  //console.log('getValue', obj, path)
-  //if (path) {
+  // console.log('getValue', obj, path)
+  // if (path) {
   if (path.length === 1) {
     return obj[path[0]];
   } else if (path.length === 2) {
@@ -15,5 +15,5 @@ export default function getValue(obj, path) {
         path
     );
   }
-  //}
+  // }
 }

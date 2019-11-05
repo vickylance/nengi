@@ -3,22 +3,22 @@
  * Offers a stream for writing to a BitBuffer that increments its own offset.
  * Supplying an offset [optional] will start the stream at the specified position.
  */
-function BitStream(bitBuffer, offset) {
+function BitStream(bitBuffer, offset = 0) {
   this.bitBuffer = bitBuffer;
-  this.offset = typeof offset === 'undefined' ? 0 : offset;
+  this.offset = offset;
 }
 
 // map functions from BitStream to BitBuffer
-var _factoryRead = function(readFn, bits) {
+const _factoryRead = (readFn, bits) => {
   return function bitStreamFactoryRead() {
-    var value = this.bitBuffer[readFn](this.offset);
+    const value = this.bitBuffer[readFn](this.offset);
     this.offset += bits;
     return value;
   };
 };
 
 // map functions from BitStream to BitBuffer
-var _factoryWrite = function(writeFn, bits) {
+const _factoryWrite = (writeFn, bits) => {
   return function bitStreamFactoryWrite(value) {
     this.bitBuffer[writeFn](value, this.offset);
     this.offset += bits;
@@ -73,7 +73,7 @@ BitStream.prototype.writeUInt16 = function(value) {
   this.offset += 16;
 };
 
-//_factoryWrite('writeUInt16', 16)
+// _factoryWrite('writeUInt16', 16)
 
 BitStream.prototype.writeInt32 = _factoryWrite('writeInt32', 32);
 BitStream.prototype.writeUInt32 = _factoryWrite('writeUInt32', 32);
@@ -83,7 +83,7 @@ BitStream.prototype.writeFloat32 = function(value) {
   this.offset += 32;
 };
 
-//_factoryWrite('writeFloat32', 32)
+// _factoryWrite('writeFloat32', 32)
 
 BitStream.prototype.writeFloat64 = _factoryWrite('writeFloat64', 64);
 

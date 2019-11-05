@@ -3,7 +3,7 @@ import compare from '../../protocol/compare';
 import getValue from '../../protocol/getValue';
 
 function locateDiff(prop, diffs) {
-  for (var i = 0; i < diffs.length; i++) {
+  for (let i = 0; i < diffs.length; i++) {
     if (diffs[i].prop === prop) {
       return diffs[i];
     }
@@ -13,34 +13,34 @@ function locateDiff(prop, diffs) {
 
 // 3 cases: batch update, single prop update, or no update needed
 export default function chooseOptimization(idPropertyName, oldProxy, newProxy, protocol) {
-  var id = oldProxy[idPropertyName];
-  var idType = protocol.properties[idPropertyName].type;
+  const id = oldProxy[idPropertyName];
+  const idType = protocol.properties[idPropertyName].type;
 
-  var formattedUpdates = {
+  const formattedUpdates = {
     batch: {
-      id: id,
-      idType: idType,
+      id,
+      idType,
       updates: []
     },
     singleProps: []
   };
 
-  var diffs = compare(oldProxy, newProxy, protocol);
+  const diffs = compare(oldProxy, newProxy, protocol);
 
   if (diffs.length === 0) {
     return formattedUpdates;
   }
 
   // batching is disabled until a future version
-  var isBatchValid = false; //isBatchAtomiclyValid(diffs, protocol)
+  const isBatchValid = false; // isBatchAtomiclyValid(diffs, protocol)
 
   if (isBatchValid) {
     protocol.batch.keys.forEach(key => {
-      var diff = locateDiff(key, diffs);
-      var opt = protocol.batch.properties[key];
-      var propData = protocol.properties[key];
+      const diff = locateDiff(key, diffs);
+      const opt = protocol.batch.properties[key];
+      const propData = protocol.properties[key];
 
-      var value = 0;
+      let value = 0;
 
       if (diff) {
         if (opt.delta) {
@@ -56,7 +56,7 @@ export default function chooseOptimization(idPropertyName, oldProxy, newProxy, p
 
       formattedUpdates.batch.updates.push({
         isDelta: opt.delta,
-        value: value,
+        value,
         valueType: opt.type,
         prop: key,
         path: propData.path
@@ -64,9 +64,9 @@ export default function chooseOptimization(idPropertyName, oldProxy, newProxy, p
     });
   }
 
-  for (var i = 0; i < diffs.length; i++) {
-    var diff = diffs[i];
-    var opt = null;
+  for (let i = 0; i < diffs.length; i++) {
+    const diff = diffs[i];
+    let opt = null;
 
     if (protocol.hasOptimizations) {
       opt = protocol.batch.properties[diff.prop];
@@ -74,11 +74,11 @@ export default function chooseOptimization(idPropertyName, oldProxy, newProxy, p
 
     if (isBatchValid && opt) {
     } else {
-      var propData = protocol.properties[diff.prop];
+      const propData = protocol.properties[diff.prop];
 
       formattedUpdates.singleProps.push({
-        id: id,
-        idType: idType,
+        id,
+        idType,
         key: propData.key,
         keyType: protocol.keyType,
         value: diff.is,

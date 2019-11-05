@@ -28,7 +28,7 @@ import BasicSpace from './BasicSpace';
 import { EventEmitter } from 'events';
 import Channel from './Channel';
 
-//const Components = require('./Components')
+// const Components = require('./Components')
 const defaults = {
   USE_HISTORIAN: true,
   HISTORIAN_TICKS: 40,
@@ -45,7 +45,7 @@ class Instance extends EventEmitter {
     if (!config) {
       throw new Error('Instance requries a nengiConfig');
     } else {
-      for (let prop in defaults) {
+      for (const prop in defaults) {
         if (typeof config[prop] === 'undefined') {
           config[prop] = defaults[prop];
         }
@@ -80,7 +80,7 @@ class Instance extends EventEmitter {
     this.localEvents = [];
     this.proxyCache = {};
 
-    //this.components = new Components(this)
+    // this.components = new Components(this)
 
     this.historian = new Historian(
       config.UPDATE_RATE,
@@ -114,7 +114,7 @@ class Instance extends EventEmitter {
 
     if (typeof webConfig.port !== 'undefined') {
       this.wsServer = new WebSocketServer({ port: webConfig.port }, () => {
-        //console.log(this.wsServer)
+        // console.log(this.wsServer)
       });
     } else if (typeof webConfig.httpServer !== 'undefined') {
       this.wsServer = new WebSocketServer({ server: webConfig.httpServer });
@@ -126,7 +126,7 @@ class Instance extends EventEmitter {
     }
 
     this.wsServer.on('connection', (ws, req) => {
-      var client = this.connect(ws);
+      const client = this.connect(ws);
       ws.on('message', message => {
         this.onMessage(message, client);
       });
@@ -167,20 +167,20 @@ class Instance extends EventEmitter {
 
   onMessage(message, client) {
     try {
-      //console.log('message', message)
-      var commandMessage = readCommandBuffer(message, this.protocols, this.config);
+      // console.log('message', message)
+      const commandMessage = readCommandBuffer(message, this.protocols, this.config);
     } catch (err) {
       if (err) {
         console.log('onMessage error, disconnecting client', err);
         this.disconnect(client);
-        //console.log(err.stack)
+        // console.log(err.stack)
         this.pendingClients.delete(client.connection);
       }
       return;
     }
     if (commandMessage.handshake !== -1) {
       if (typeof this.connectCallback === 'function') {
-        var clientData = {
+        const clientData = {
           fromClient: commandMessage.handshake,
           fromTransfer: null
         };
@@ -211,14 +211,14 @@ class Instance extends EventEmitter {
     this.commands.push({
       tick: commandMessage.tick,
       pong: commandMessage.pong,
-      client: client,
+      client,
       commands: commandMessage.commands
     });
   }
 
   getNextCommand() {
-    var cmd = this.commands.shift();
-    //console.log(cmd)
+    const cmd = this.commands.shift();
+    // console.log(cmd)
     if (cmd && cmd.client.lastProcessedClientTick < cmd.tick) {
       cmd.client.lastProcessedClientTick = cmd.tick;
     }
@@ -234,8 +234,8 @@ class Instance extends EventEmitter {
     this.addClient(client);
     client.accepted = true;
 
-    var bitBuffer = createConnectionResponseBuffer(true, text);
-    var buffer = bitBuffer.toBuffer();
+    const bitBuffer = createConnectionResponseBuffer(true, text);
+    const buffer = bitBuffer.toBuffer();
     if (client.connection.readyState === 1) {
       client.connection.send(buffer, { binary: true });
     }
@@ -244,8 +244,8 @@ class Instance extends EventEmitter {
   denyConnection(client, text) {
     this.pendingClients.delete(client.connection);
 
-    var bitBuffer = createConnectionResponseBuffer(false, text);
-    var buffer = bitBuffer.toBuffer();
+    const bitBuffer = createConnectionResponseBuffer(false, text);
+    const buffer = bitBuffer.toBuffer();
 
     if (client.connection.readyState === 1) {
       client.connection.send(buffer, { binary: true });
@@ -254,7 +254,7 @@ class Instance extends EventEmitter {
   }
 
   connect(connection) {
-    var client = new Client(this.config);
+    const client = new Client(this.config);
     client.connection = connection;
     this.pendingClients.set(connection, client);
     return client;
@@ -311,8 +311,8 @@ class Instance extends EventEmitter {
     }
     const entitySources = this.sources.get(nid);
     entitySources.add(sourceId);
-    //console.log('registered source', sourceId, nid)
-    //console.log('sources', this.sources)
+    // console.log('registered source', sourceId, nid)
+    // console.log('sources', this.sources)
     return nid;
   }
 
@@ -320,14 +320,14 @@ class Instance extends EventEmitter {
     const nid = entity[this.config.ID_PROPERTY_NAME];
     const entitySources = this.sources.get(nid);
     entitySources.delete(sourceId);
-    //console.log('unregistering source', sourceId, nid)
+    // console.log('unregistering source', sourceId, nid)
 
     if (entitySources.size === 0) {
       this.sources.delete(nid);
       this._entities.remove(entity);
       this.entityIdPool.queueReturnId(nid);
       entity[this.config.ID_PROPERTY_NAME] = -1;
-      //console.log('entity is fully unregistered now')
+      // console.log('entity is fully unregistered now')
     }
   }
 
@@ -422,7 +422,7 @@ class Instance extends EventEmitter {
             //console.log('>>>>>', message.protocol, message.outers[0].protocol, message.outers[0].inners[0].protocol)
 
             //message.outers[0].protocol
-            //message.outers[0].protocol.properties.inners.protocol = message.outers[0].protocol.inners.prototype.protocol 
+            //message.outers[0].protocol.properties.inners.protocol = message.outers[0].protocol.inners.prototype.protocol
         }
         */
 
@@ -446,7 +446,7 @@ class Instance extends EventEmitter {
   }
 
   sendJSON(json, clientOrClients) {
-    var payload = typeof json === 'string' ? json : JSON.stringify(json);
+    const payload = typeof json === 'string' ? json : JSON.stringify(json);
 
     if (Array.isArray(clientOrClients)) {
       clientOrClients.forEach(client => {
@@ -468,12 +468,12 @@ class Instance extends EventEmitter {
           'nengi encountered an entity without a protocol. Did you forget to attach a protocol to an entity or list it in the config? Did you add an entity to the instance that was never supposed to be networked?'
         );
       }
-      var proxy = proxify(entity, entity.protocol);
+      const proxy = proxify(entity, entity.protocol);
       this.proxyCache[tick].entities[entity.id] = proxy;
 
       if (this.proxyCache[tick - 1]) {
-        //console.log('here')
-        var proxyOld = this.proxyCache[tick - 1].entities[entity.id];
+        // console.log('here')
+        const proxyOld = this.proxyCache[tick - 1].entities[entity.id];
         if (proxyOld) {
           proxy.diff = chooseOptimization(
             this.config.ID_PROPERTY_NAME,
@@ -500,23 +500,23 @@ class Instance extends EventEmitter {
     if (proxy && proxy.diffTick === tick) {
       return proxy;
     }
-    //let old = client.entityCache.getEntity(entity.id)
-    //console.log('found old', old)
-    //if (old) {
+    // let old = client.entityCache.getEntity(entity.id)
+    // console.log('found old', old)
+    // if (old) {
     if (isDiff) {
       let proxyOld;
       if (this.proxyCache[client.entityCache.lastTick]) {
         proxyOld = this.proxyCache[client.entityCache.lastTick].entities[
           entity[this.config.ID_PROPERTY_NAME]
         ];
-        //console.log('found old proxy')
+        // console.log('found old proxy')
       } else {
-        //console.log('old')
-        //proxyOld = proxify(old, entity.protocol)
-        //this.proxyCache[tick].entities[entity.id] = proxyOld
-        //console.log('had to reproxify an old object')
+        // console.log('old')
+        // proxyOld = proxify(old, entity.protocol)
+        // this.proxyCache[tick].entities[entity.id] = proxyOld
+        // console.log('had to reproxify an old object')
       }
-      //var proxyOld = this.proxyCache[old._nTick].entities[entity.id]//proxify(old, entity.protocol)
+      // var proxyOld = this.proxyCache[old._nTick].entities[entity.id]//proxify(old, entity.protocol)
       if (proxyOld) {
         this.debugCount++;
         proxy.diff = chooseOptimization(
@@ -535,43 +535,43 @@ class Instance extends EventEmitter {
     }
 
     // }
-    //console.log('hey', proxy)
+    // console.log('hey', proxy)
     return proxy;
   }
 
   update() {
-    //console.log('sources', this.sources)
+    // console.log('sources', this.sources)
     /*
         console.log(
-            'entsA', this.entities.toArray().length, 
-            'entsB', this._entities.toArray().length, 
+            'entsA', this.entities.toArray().length,
+            'entsB', this._entities.toArray().length,
             'clients', this.clients.toArray().length,
             'channels', this.channels.toArray().length
         )
         */
 
-    //console.log(this.entities.toArray())
+    // console.log(this.entities.toArray())
     if (this.config.USE_HISTORIAN) {
       this.historian.record(this.tick, this.entities.toArray(), this.localEvents);
     }
 
     this.localEvents = [];
 
-    //this.components.process()
+    // this.components.process()
 
-    var spatialStructure = this.config.USE_HISTORIAN
+    const spatialStructure = this.config.USE_HISTORIAN
       ? this.historian.getCurrentState()
       : this.basicSpace;
 
-    var now = Date.now();
-    var clients = this.clients.toArray();
+    const now = Date.now();
+    const clients = this.clients.toArray();
 
-    for (var i = 0; i < clients.length; i++) {
-      var client = clients[i];
+    for (let i = 0; i < clients.length; i++) {
+      const client = clients[i];
 
-      var snapshot = this.createSnapshot(this.tick, client, spatialStructure, now);
-      var bitBuffer = createSnapshotBuffer(snapshot, this.config);
-      var buffer = bitBuffer.toBuffer();
+      const snapshot = this.createSnapshot(this.tick, client, spatialStructure, now);
+      const bitBuffer = createSnapshotBuffer(snapshot, this.config);
+      const buffer = bitBuffer.toBuffer();
 
       if (client.connection.readyState === 1) {
         client.connection.send(buffer, { binary: true });
@@ -581,14 +581,14 @@ class Instance extends EventEmitter {
 
     delete this.proxyCache[this.tick - 20];
 
-    //this.components.clear()
+    // this.components.clear()
     this.noInterps = [];
     this.deleteEntities = [];
     this.createEntities = [];
     this.entityIdPool.update();
     this.tick++;
 
-    //console.log('debug count', this.debugCount)
+    // console.log('debug count', this.debugCount)
     this.debugCount = 0;
 
     if (!this.config.USE_HISTORIAN) {
@@ -597,40 +597,40 @@ class Instance extends EventEmitter {
   }
 
   createSnapshot(tick, client, spatialStructure, now) {
-    //console.log('CREATE SNAPSHOT')
+    // console.log('CREATE SNAPSHOT')
     if (typeof this.proxyCache[tick] === 'undefined') {
       this.proxyCache[tick] = {
         entities: {}
       };
     }
 
-    var now = Date.now();
+    const now = Date.now();
 
     // when timestamp is -1, no timesync is sent to the client
-    //console.log(tick, tick % 100)
-    var timestamp = tick % this.config.UPDATE_RATE === 0 ? now : -1;
+    // console.log(tick, tick % 100)
+    let timestamp = tick % this.config.UPDATE_RATE === 0 ? now : -1;
 
     if (client.lastReceivedTick === -1) {
       timestamp = now;
     }
     client.lastReceivedTick = tick;
 
-    //console.log('createSnapshot timestamp', timestamp)
-    var avgLatency = Math.round(client.latencyRecord.averageLatency);
-    //console.log('########', avgLatency)
+    // console.log('createSnapshot timestamp', timestamp)
+    let avgLatency = Math.round(client.latencyRecord.averageLatency);
+    // console.log('########', avgLatency)
     if (avgLatency > 999) {
       avgLatency = 999;
     } else if (avgLatency < 0) {
       avgLatency = 0;
     }
 
-    var snapshot = {
-      tick: tick,
+    const snapshot = {
+      tick,
       clientTick: client.lastProcessedClientTick,
 
       pingKey: client.latencyRecord.generatePingKey(),
-      avgLatency: avgLatency,
-      timestamp: timestamp,
+      avgLatency,
+      timestamp,
       transferKey: client.transferKey,
 
       engineMessages: [],
@@ -646,13 +646,13 @@ class Instance extends EventEmitter {
       }
     };
 
-    //this.components.snapshotDecorate(snapshot)
+    // this.components.snapshotDecorate(snapshot)
 
     if (client.transferKey !== -1) {
       client.transferKey = -1;
     }
 
-    for (var i = 0; i < client.messageQueue.length; i++) {
+    for (let i = 0; i < client.messageQueue.length; i++) {
       snapshot.messages.push(client.messageQueue[i]);
     }
     client.messageQueue = [];
@@ -663,42 +663,42 @@ class Instance extends EventEmitter {
 
     client.jsonQueue = [];
 
-    var vision = client.checkVisibility(spatialStructure, tick);
+    const vision = client.checkVisibility(spatialStructure, tick);
 
     // entity create
-    for (var i = 0; i < vision.newlyVisible.length; i++) {
-      let id = vision.newlyVisible[i];
-      let entity = this.getEntity(id);
-      let proxy = this.proxifyOrGetCachedProxyPerClient(client, entity, tick, false);
+    for (let i = 0; i < vision.newlyVisible.length; i++) {
+      const id = vision.newlyVisible[i];
+      const entity = this.getEntity(id);
+      const proxy = this.proxifyOrGetCachedProxyPerClient(client, entity, tick, false);
       proxy.protocol = entity.protocol;
-      //Object.freeze(proxy)
+      // Object.freeze(proxy)
       snapshot.createEntities.push(proxy);
 
-      //this.components.snapshotCreateEntity(entity, snapshot, tick)
+      // this.components.snapshotCreateEntity(entity, snapshot, tick)
     }
 
-    var tempNoInterps = [];
-    for (var i = 0; i < vision.stillVisible.length; i++) {
-      let id = vision.stillVisible[i];
+    const tempNoInterps = [];
+    for (let i = 0; i < vision.stillVisible.length; i++) {
+      const id = vision.stillVisible[i];
       // console.log('doing id', id)
-      let entity = this.getEntity(id);
+      const entity = this.getEntity(id);
       if (this.sleepManager.isAwake(entity[this.config.ID_PROPERTY_NAME])) {
-        let proxy = this.proxifyOrGetCachedProxyPerClient(client, entity, tick, true);
-        //console.log(proxy)
+        const proxy = this.proxifyOrGetCachedProxyPerClient(client, entity, tick, true);
+        // console.log(proxy)
 
-        //var proxyOld = client.entityCache.getEntity(id)
+        // var proxyOld = client.entityCache.getEntity(id)
 
-        let formattedUpdates = proxy.diff;
+        const formattedUpdates = proxy.diff;
 
-        for (var j = 0; j < formattedUpdates.singleProps.length; j++) {
-          var singleProp = formattedUpdates.singleProps[j];
+        for (let j = 0; j < formattedUpdates.singleProps.length; j++) {
+          const singleProp = formattedUpdates.singleProps[j];
           snapshot.updateEntities.partial.push(singleProp);
         }
       } else {
         this.proxifyOrGetCachedProxyPerClient(client, entity, tick, false);
       }
 
-      //this.components.snapshotUpdateEntity(entity, snapshot, tick)
+      // this.components.snapshotUpdateEntity(entity, snapshot, tick)
 
       if (this.noInterps.indexOf(id) !== -1) {
         tempNoInterps.push(id);
@@ -706,21 +706,21 @@ class Instance extends EventEmitter {
     }
 
     if (tempNoInterps.length > 0) {
-      var msg = new NoInterpsMessage(tempNoInterps);
+      const msg = new NoInterpsMessage(tempNoInterps);
       msg.protocol = this.protocols.getMetaProtocol(msg.type);
       snapshot.engineMessages.push(msg);
     }
 
     // entity delete
-    for (var i = 0; i < vision.noLongerVisible.length; i++) {
+    for (let i = 0; i < vision.noLongerVisible.length; i++) {
       snapshot.deleteEntities.push(vision.noLongerVisible[i]);
-      let entity = this.getEntity(vision.noLongerVisible[i]);
-      //this.components.snapshotDeleteEntity(entity, snapshot)
+      const entity = this.getEntity(vision.noLongerVisible[i]);
+      // this.components.snapshotDeleteEntity(entity, snapshot)
     }
     // TODO alias
 
     snapshot.localEvents = vision.events;
-    //console.log('snapshot', snapshot)
+    // console.log('snapshot', snapshot)
     return snapshot;
   }
 }

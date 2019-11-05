@@ -3,7 +3,7 @@ import Binary from '../../binary/Binary';
 import countBatchBits from '../../protocol/countBits/countBatchBits';
 
 function countBatchesBits(batches) {
-  var bits = 0;
+  let bits = 0;
   if (batches.length > 0) {
     bits += Binary[BinaryType.UInt8].bits;
     bits += Binary[BinaryType.UInt16].bits;

@@ -1,6 +1,6 @@
-import writeMessage from './message';
+import writeMessage from './writeMessage';
 
-var writeEntity = function(bitStream, proxy, schema) {
+const writeEntity = (bitStream, proxy, schema) => {
   writeMessage(bitStream, proxy, schema);
 };
 

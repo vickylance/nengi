@@ -1,8 +1,8 @@
 import Protocol from './Protocol';
-//var config = require('../../config')
+// var config = require('../../config')
 
 function LocalEventProtocol(schemaConfig, config) {
-  //console.log(schemaConfig)
+  // console.log(schemaConfig)
   schemaConfig[config.TYPE_PROPERTY_NAME] = {
     type: config.TYPE_BINARY_TYPE,
     interp: false,
@@ -17,7 +17,7 @@ function LocalEventProtocol(schemaConfig, config) {
     throw new Error('EventSchema must define y.');
   }
 
-  var protocol = new Protocol(schemaConfig, config);
+  const protocol = new Protocol(schemaConfig, config);
   protocol.type = 'LocalEvent';
 
   return protocol;

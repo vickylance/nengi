@@ -25,7 +25,6 @@ const config = {
     }
 }
 
-
 const protocolMap = new nengi.ProtocolMap(config, nengi.metaConfig)
 const bot = new nengi.Bot(config, protocolMap)
 

@@ -16,10 +16,13 @@ enum BinaryType {
   'UInt16',
   'UInt32',
 
+  'Int2',
+  'Int3',
   'Int4',
   'Int6',
   'Int8',
   'Int10',
+  'Int12',
   'Int16',
   'Int32',
 

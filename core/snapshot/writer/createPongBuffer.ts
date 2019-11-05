@@ -5,12 +5,12 @@ import countPongBits from './countPongBits';
 import writePong from './writePong';
 
 function createPongBuffer(pongKey) {
-  var bits = 0;
+  let bits = 0;
   bits += 8;
   bits += 8;
 
-  var bitBuffer = new BitBuffer(bits);
-  var bitStream = new BitStream(bitBuffer);
+  const bitBuffer = new BitBuffer(bits);
+  const bitStream = new BitStream(bitBuffer);
 
   bitStream.writeUInt8(Chunk.Pong);
   bitStream.writeUInt8(pongKey);

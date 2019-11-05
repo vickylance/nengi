@@ -10,8 +10,8 @@ class Channel {
     this.config = instance.config;
     this.entities = new EDictionary(this.config.ID_PROPERTY_NAME);
     this.clients = new Map();
-    //this.instance.channelCount++
-    //this.instance.channels.add(this)
+    // this.instance.channelCount++
+    // this.instance.channels.add(this)
   }
 
   addEntity(entity) {
@@ -24,13 +24,13 @@ class Channel {
   }
 
   removeEntity(entity) {
-    //console.log('channel removeEntity', entity[this.config.ID_PROPERTY_NAME])
+    // console.log('channel removeEntity', entity[this.config.ID_PROPERTY_NAME])
     this.entities.remove(entity);
     this.instance.unregisterEntity(entity, this.id);
   }
 
   addMessage(message) {
-    //console.log('channel addMessage', message)
+    // console.log('channel addMessage', message)
     message[this.config.TYPE_PROPERTY_NAME] = this.instance.protocols.getIndex(message.protocol);
     this.clients.forEach(client => {
       client.queueMessage(message);
@@ -51,7 +51,7 @@ class Channel {
     this.clients.forEach(client => this.unsubscribe(client));
     this.entities.forEach(entity => this.removeEntity(entity));
     this.instance.channels.remove(this);
-    //this.instance.channelCount--
+    // this.instance.channelCount--
   }
 }
 

@@ -5,17 +5,18 @@
  */
 import compareInts from './compare/compareIntegers';
 
-var Int10 = {
+const boundsCheck = (value: number) => {
+  return value >= Int10.min && value <= Int10.max;
+};
+
+const Int10 = {
   min: -512,
   max: 511,
   bits: 10,
   compare: compareInts,
   write: 'writeInt10',
-  read: 'readInt10'
-};
-
-Int10.boundsCheck = function(value) {
-  return value >= Int10.min && value <= Int10.max;
+  read: 'readInt10',
+  boundsCheck
 };
 
 export default Int10;

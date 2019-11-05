@@ -21,7 +21,7 @@ class Client {
     this.entityIds = [];
     this.messageQueue = [];
     this.jsonQueue = [];
-    this.entityCache = new FauxCache(); //new EntityCache())
+    this.entityCache = new FauxCache(); // new EntityCache())
 
     this.cache = {};
     this.cacheArr = [];
@@ -37,7 +37,7 @@ class Client {
   }
 
   addCreate(id) {
-    //console.log('entity registered with client', id)
+    // console.log('entity registered with client', id)
     this.cr.push(id);
   }
   addDelete(id) {
@@ -45,16 +45,16 @@ class Client {
   }
 
   subscribe(channel) {
-    //console.log('client subscribed to channel')
+    // console.log('client subscribed to channel')
     this.channels.push(channel);
     channel.entities.forEach(entity => {
-      //console.log('entity in channel', entity)
+      // console.log('entity in channel', entity)
       this.addCreate(entity.id);
     });
   }
 
   unsubscribe(channel) {
-    let index = this.channels.indexOf(channel);
+    const index = this.channels.indexOf(channel);
     if (index !== -1) {
       this.channels.splice(index, 1);
     } else {
@@ -88,7 +88,7 @@ class Client {
   }
 
   checkVisibility(spatialStructure, tick) {
-    //console.log(this.entityCache)
+    // console.log(this.entityCache)
     const toCreate = [];
     const toUpdate = [];
     const toDelete = [];
@@ -110,7 +110,7 @@ class Client {
     const nearby = spatialStructure.queryArea(this.view);
     // console.log(this.view.x, this.view.y, this.entity.x, this.entity.y, nearby.entities.length)
     const eventIds = [];
-    for (var i = 0; i < nearby.events.length; i++) {
+    for (let i = 0; i < nearby.events.length; i++) {
       eventIds.push(nearby.events[i][this.config.ID_PROPERTY_NAME]);
     }
 
@@ -130,19 +130,19 @@ class Client {
     for (let i = this.cacheArr.length - 1; i > -1; i--) {
       const id = this.cacheArr[i];
       if (this.cache[id] !== tick) {
-        //console.log('delete', id)
+        // console.log('delete', id)
         toDelete.push(id);
         this.cache[id] = 0;
-        //delete this.cache[id]
+        // delete this.cache[id]
         this.cacheArr.splice(i, 1);
       }
     }
 
     return {
       events: nearby.events,
-      noLongerVisible: toDelete, //diffs.aOnly,
-      stillVisible: toUpdate, //diffs.both,
-      newlyVisible: toCreate //diffs.bOnly
+      noLongerVisible: toDelete, // diffs.aOnly,
+      stillVisible: toUpdate, // diffs.both,
+      newlyVisible: toCreate // diffs.bOnly
     };
   }
 

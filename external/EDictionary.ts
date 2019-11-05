@@ -10,7 +10,7 @@ class EDictionary {
   }
 
   get(id) {
-    var obj = this.object[id];
+    const obj = this.object[id];
     if (typeof obj !== 'undefined') {
       return this.object[id];
     }
@@ -40,14 +40,14 @@ class EDictionary {
     if (typeof obj === 'object' && typeof obj[this.ID_PROPERTY_NAME] !== 'undefined') {
       return this.removeById(obj[this.ID_PROPERTY_NAME]);
     } else {
-      //throw new Error('EDictionary could not remove object, invalid object or object.id.')
+      // throw new Error('EDictionary could not remove object, invalid object or object.id.')
     }
   }
 
   removeById(id) {
     if (typeof id !== 'undefined') {
-      var index = -1;
-      for (var i = 0; i < this.array.length; i++) {
+      let index = -1;
+      for (let i = 0; i < this.array.length; i++) {
         if (this.array[i][this.ID_PROPERTY_NAME] === id) {
           index = i;
           break;
@@ -56,13 +56,13 @@ class EDictionary {
       if (index !== -1) {
         this.array.splice(index, 1);
       } else {
-        //throw new Error('EDictionary could not remove object, id not found.')
+        // throw new Error('EDictionary could not remove object, id not found.')
       }
-      var temp = this.object[id];
+      const temp = this.object[id];
       delete this.object[id];
       return temp;
     } else {
-      //throw new Error('EDictionary could not removeById, invalid id.')
+      // throw new Error('EDictionary could not removeById, invalid id.')
     }
   }
 }

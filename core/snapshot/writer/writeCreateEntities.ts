@@ -10,8 +10,8 @@ function writeCreateEntities(chunkType, bitStream, entities) {
     // number of entities
     bitStream[Binary[BinaryType.UInt16].write](entities.length);
 
-    for (var i = 0; i < entities.length; i++) {
-      var entity = entities[i];
+    for (let i = 0; i < entities.length; i++) {
+      const entity = entities[i];
       writeMessage(bitStream, entity, entity.protocol);
     }
   }

@@ -5,7 +5,7 @@
  */
 import compareInts from './compare/compareIntegers';
 
-var UInt12 = {
+const UInt12 = {
   min: 0,
   max: 4095,
   bits: 12,

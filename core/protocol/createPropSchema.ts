@@ -1,9 +1,9 @@
-var createPropSchema = function(index, propConfig, throwOnAdvancedTypes) {
-  var type = null;
-  var interp = false;
-  var isArray = false;
-  var arrayIndexType = null;
-  var protocol = null;
+const createPropSchema = function(index, propConfig, throwOnAdvancedTypes) {
+  let type = null;
+  let interp = false;
+  let isArray = false;
+  let arrayIndexType = null;
+  let protocol = null;
 
   if (typeof propConfig === 'object') {
     /*
@@ -53,10 +53,10 @@ var createPropSchema = function(index, propConfig, throwOnAdvancedTypes) {
         // array of type protocol
         type = propConfig.type.prototype.protocol;
         protocol = propConfig.type.prototype.protocol;
-        //console.log('array of subprotocols', propConfig)
+        // console.log('array of subprotocols', propConfig)
       } else {
         // array of basic types (uint,int,bool,string, etc)
-        //console.log('regular array', propConfig)
+        // console.log('regular array', propConfig)
         type = propConfig.type;
       }
 
@@ -73,7 +73,7 @@ var createPropSchema = function(index, propConfig, throwOnAdvancedTypes) {
 			}
 			*/
 
-      //console.log('ARRAY of values', propConfig, propConfig.type.prototype.protocol)
+      // console.log('ARRAY of values', propConfig, propConfig.type.prototype.protocol)
       isArray = true;
       arrayIndexType = propConfig.indexType;
       if (throwOnAdvancedTypes) {
@@ -95,11 +95,11 @@ var createPropSchema = function(index, propConfig, throwOnAdvancedTypes) {
 
   return {
     key: index,
-    protocol: protocol,
-    type: type,
-    interp: interp,
-    isArray: isArray,
-    arrayIndexType: arrayIndexType
+    protocol,
+    type,
+    interp,
+    isArray,
+    arrayIndexType
   };
 };
 

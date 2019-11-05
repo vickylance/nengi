@@ -19,35 +19,35 @@ const lerp = function(a, b, portion) {
 };
 
 const findInitialSnapshot = function(snapshots, renderTime) {
-  for (var i = snapshots.length - 1; i >= 0; i--) {
-    var snapshot = snapshots[i];
+  for (let i = snapshots.length - 1; i >= 0; i--) {
+    const snapshot = snapshots[i];
     if (snapshot.timestamp < renderTime) {
-      return { snapshot: snapshot, index: i };
+      return { snapshot, index: i };
     }
   }
   return null;
 };
 
 const interpolateSnapshots = (snapshots, currTimestamp, cache, predictor, config) => {
-  //console.log('PREDICTIONS', predictor)
-  let init = findInitialSnapshot(snapshots, currTimestamp);
+  // console.log('PREDICTIONS', predictor)
+  const init = findInitialSnapshot(snapshots, currTimestamp);
   if (!init) {
     return null;
   }
-  let snapshotA = init.snapshot;
+  const snapshotA = init.snapshot;
   let snapshotB = null;
-  let late = [];
+  const late = [];
   if (snapshotA) {
-    for (var i = 0; i < snapshots.length; i++) {
+    for (let i = 0; i < snapshots.length; i++) {
       if (snapshots[i].tick === snapshotA.tick + 1) {
         snapshotB = snapshots[i];
       }
     }
 
-    //if (snapshotA.tick - 1 > lastProcessedTick) {
+    // if (snapshotA.tick - 1 > lastProcessedTick) {
     // TODO: does this get checked more than it ought to be?
-    for (var i = snapshots.length - 1; i > -1; i--) {
-      let snapshot = snapshots[i];
+    for (let i = snapshots.length - 1; i > -1; i--) {
+      const snapshot = snapshots[i];
 
       if (snapshot.tick < snapshotA.tick && !snapshot.processed) {
         late.push(snapshot);
@@ -59,9 +59,9 @@ const interpolateSnapshots = (snapshots, currTimestamp, cache, predictor, config
     late.reverse();
 
     // update the cache based on released late snapshots
-    for (var j = 0; j < late.length; j++) {
+    for (let j = 0; j < late.length; j++) {
       const lateSnapshot = late[j];
-      for (var k = 0; k < lateSnapshot.updateEntities.length; k++) {
+      for (let k = 0; k < lateSnapshot.updateEntities.length; k++) {
         const lateUpdate = lateSnapshot.updateEntities[k];
         cacheUpdateCheck(cache, lateUpdate, lateUpdate.value, config);
       }
@@ -69,11 +69,11 @@ const interpolateSnapshots = (snapshots, currTimestamp, cache, predictor, config
   }
 
   if (snapshotB) {
-    let total = snapshotB.timestamp - snapshotA.timestamp;
-    let portion = currTimestamp - snapshotA.timestamp;
-    let ratio = portion / total;
+    const total = snapshotB.timestamp - snapshotA.timestamp;
+    const portion = currTimestamp - snapshotA.timestamp;
+    const ratio = portion / total;
 
-    let interpState = {
+    const interpState = {
       createEntities: [],
       updateEntities: [],
       deleteEntities: []
@@ -82,11 +82,11 @@ const interpolateSnapshots = (snapshots, currTimestamp, cache, predictor, config
     if (!snapshotA.processed) {
       interpState.createEntities = snapshotA.createEntities.slice();
       interpState.deleteEntities = snapshotA.deleteEntities.slice();
-      interpState.updateEntities = []; //snapshotA.updateEntities.slice()
+      interpState.updateEntities = []; // snapshotA.updateEntities.slice()
       snapshotA.processed = true;
       predictor.cleanUp(snapshotA.clientTick - 1);
 
-      for (var i = 0; i < snapshotA.deleteEntities.length; i++) {
+      for (let i = 0; i < snapshotA.deleteEntities.length; i++) {
         delete cache[snapshotA.deleteEntities[i]];
       }
     }
@@ -107,7 +107,7 @@ const interpolateSnapshots = (snapshots, currTimestamp, cache, predictor, config
       const update = snapshotB.updateEntities[i];
       const id = update[config.ID_PROPERTY_NAME];
       // console.log('up', update)
-      //console.log('ssa', snapshotA.clientTick, snapshotB.clientTick)
+      // console.log('ssa', snapshotA.clientTick, snapshotB.clientTick)
 
       const entityA = snapshotA.entities.get(id);
       const entityB = snapshotB.entities.get(id);
@@ -120,9 +120,9 @@ const interpolateSnapshots = (snapshots, currTimestamp, cache, predictor, config
           // CASE: entity value is marked for interp and changed in both A and B, correct value is interpolated
           const valueA = getValue(entityA, update.path);
           const valueB = getValue(entityB, update.path);
-          //if (valueA === valueB) {
+          // if (valueA === valueB) {
           // continue
-          //}
+          // }
 
           let valueInterp = valueA;
           // options for binary types that have custom interpolation logic
@@ -148,7 +148,7 @@ const interpolateSnapshots = (snapshots, currTimestamp, cache, predictor, config
           }
         }
       } else {
-        //console.log('only one')
+        // console.log('only one')
       }
     }
 
@@ -162,32 +162,32 @@ const interpolateSnapshots = (snapshots, currTimestamp, cache, predictor, config
   }
 
   return {
-    snapshotA: snapshotA,
-    snapshotB: snapshotB,
-    late: late
+    snapshotA,
+    snapshotB,
+    late
   };
 };
 
 const interpolateSnapshots2 = (snapshots, currTimestamp, cache, predictor, config) => {
-  //console.log('PREDICTIONS', predictions)
-  let init = findInitialSnapshot(snapshots, currTimestamp);
+  // console.log('PREDICTIONS', predictions)
+  const init = findInitialSnapshot(snapshots, currTimestamp);
   if (!init) {
     return null;
   }
-  let snapshotA = init.snapshot;
+  const snapshotA = init.snapshot;
   let snapshotB = null;
-  let late = [];
+  const late = [];
   if (snapshotA) {
-    for (var i = 0; i < snapshots.length; i++) {
+    for (let i = 0; i < snapshots.length; i++) {
       if (snapshots[i].tick === snapshotA.tick + 1) {
         snapshotB = snapshots[i];
       }
     }
 
-    //if (snapshotA.tick - 1 > lastProcessedTick) {
+    // if (snapshotA.tick - 1 > lastProcessedTick) {
     // TODO: does this get checked more than it ought to be?
-    for (var i = snapshots.length - 1; i > -1; i--) {
-      let snapshot = snapshots[i];
+    for (let i = snapshots.length - 1; i > -1; i--) {
+      const snapshot = snapshots[i];
 
       if (snapshot.tick < snapshotA.tick && !snapshot.processed) {
         late.push(snapshot);
@@ -199,9 +199,9 @@ const interpolateSnapshots2 = (snapshots, currTimestamp, cache, predictor, confi
     late.reverse();
 
     // update the cache based on released late snapshots
-    for (var j = 0; j < late.length; j++) {
+    for (let j = 0; j < late.length; j++) {
       const lateSnapshot = late[j];
-      for (var k = 0; k < lateSnapshot.updateEntities.length; k++) {
+      for (let k = 0; k < lateSnapshot.updateEntities.length; k++) {
         const lateUpdate = lateSnapshot.updateEntities[k];
         cacheUpdateCheck(cache, lateUpdate, lateUpdate.value, config);
       }
@@ -209,11 +209,11 @@ const interpolateSnapshots2 = (snapshots, currTimestamp, cache, predictor, confi
   }
 
   if (snapshotB) {
-    let total = snapshotB.timestamp - snapshotA.timestamp;
-    let portion = currTimestamp - snapshotA.timestamp;
-    let ratio = portion / total;
+    const total = snapshotB.timestamp - snapshotA.timestamp;
+    const portion = currTimestamp - snapshotA.timestamp;
+    const ratio = portion / total;
 
-    let interpState = {
+    const interpState = {
       createEntities: [],
       updateEntities: [],
       deleteEntities: []
@@ -222,56 +222,56 @@ const interpolateSnapshots2 = (snapshots, currTimestamp, cache, predictor, confi
     if (!snapshotA.processed) {
       interpState.createEntities = snapshotA.createEntities.slice();
       interpState.deleteEntities = snapshotA.deleteEntities.slice();
-      interpState.updateEntities = []; //snapshotA.updateEntities.slice()
+      interpState.updateEntities = []; // snapshotA.updateEntities.slice()
       snapshotA.processed = true;
       predictor.cleanUp(snapshotA.clientTick - 1);
 
-      for (var i = 0; i < snapshotA.deleteEntities.length; i++) {
+      for (let i = 0; i < snapshotA.deleteEntities.length; i++) {
         delete cache[snapshotA.deleteEntities[i]];
       }
     }
 
-    for (var i = 0; i < snapshotA.updateEntities.length; i++) {
-      let update = snapshotA.updateEntities[i];
+    for (let i = 0; i < snapshotA.updateEntities.length; i++) {
+      const update = snapshotA.updateEntities[i];
       const id = update[config.ID_PROPERTY_NAME];
       console.log('up', update);
-      //console.log('ssa', snapshotA.clientTick, snapshotB.clientTick)
+      // console.log('ssa', snapshotA.clientTick, snapshotB.clientTick)
 
-      let entityA = snapshotA.entities.get(id);
+      const entityA = snapshotA.entities.get(id);
 
-      let propData = entityA.protocol.properties[update.prop];
-      let binaryType = Binary[propData.type];
+      const propData = entityA.protocol.properties[update.prop];
+      const binaryType = Binary[propData.type];
 
       // CASE: entity property changed in snapshotA, but not in snapshotB, correct value is A
 
       if (!snapshotB.containsUpdateFor(id, update.prop)) {
-        //console.log('a', snapshotA, 'b', snapshotB)
+        // console.log('a', snapshotA, 'b', snapshotB)
         if (cacheUpdateCheck(cache, update, update.value, config)) {
-          //console.log('quick release')
+          // console.log('quick release')
           console.log('entity', entityA.x, 'vs', update.value);
           interpState.updateEntities.push(update);
           continue;
         }
       }
 
-      let entityB = snapshotB.entities.get(id);
-      //console.log('B?', snapshotB.tick, entityB.x, entityA.x)
+      const entityB = snapshotB.entities.get(id);
+      // console.log('B?', snapshotB.tick, entityB.x, entityA.x)
 
       if (entityA && entityB) {
         if (Math.abs(entityA.x - entityB.x) > 0.001) {
           console.log(entityA.x - entityB.x);
         }
 
-        //console.log('both', propData.interp ,snapshotB.noInterps.indexOf(update[config.ID_PROPERTY_NAME]) === -1)
+        // console.log('both', propData.interp ,snapshotB.noInterps.indexOf(update[config.ID_PROPERTY_NAME]) === -1)
         if (propData.interp && snapshotB.noInterps.indexOf(id) === -1) {
           // CASE: entity value is marked for interp and changed in both A and B, correct value is interpolated
-          let valueA = getValue(entityA, update.path);
-          let valueB = getValue(entityB, update.path);
+          const valueA = getValue(entityA, update.path);
+          const valueB = getValue(entityB, update.path);
           if (valueA === valueB) {
             console.log('skip');
             continue;
           }
-          //console.log('from', valueA, 'to', valueB)
+          // console.log('from', valueA, 'to', valueB)
           let valueInterp = valueA;
 
           // options for binary types that have custom interpolation logic
@@ -313,9 +313,9 @@ const interpolateSnapshots2 = (snapshots, currTimestamp, cache, predictor, confi
   }
 
   return {
-    snapshotA: snapshotA,
-    snapshotB: snapshotB,
-    late: late
+    snapshotA,
+    snapshotB,
+    late
   };
 };
 
@@ -327,7 +327,7 @@ class Interpolator {
   }
 
   interp(snapshots, timestamp, predictions) {
-    let timeframe = interpolateSnapshots(
+    const timeframe = interpolateSnapshots(
       snapshots,
       timestamp,
       this.cache,
@@ -345,14 +345,14 @@ class Interpolator {
     }
 
     if (timeframe.late.length > 1) {
-      //console.log(timeframe.late.length, 'late aaabbb')
+      // console.log(timeframe.late.length, 'late aaabbb')
     }
     // TODO: compare the number of late frames to master, and double check timesyncing math
-    let ents = timeframe.late.slice(0, timeframe.late.length);
+    const ents = timeframe.late.slice(0, timeframe.late.length);
 
     if (timeframe.snapshotA && !timeframe.snapshotA.processed) {
-      //console.log(timeframe.snapshotA.deleteEntities)
-      //ents.push(timeframe.snapshotA)
+      // console.log(timeframe.snapshotA.deleteEntities)
+      // ents.push(timeframe.snapshotA)
     }
 
     return {

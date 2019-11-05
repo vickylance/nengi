@@ -1,5 +1,19 @@
-var boundsCheck = function(value) {
+const boundsCheck = (value: string) => {
   return value.length < 256;
+};
+
+const convertASCIIStringToByteArray = (asciiStr: string) => {
+  // console.log('convertASCIIStringToByteArray', string)
+  const arr: number[] = [];
+  if (asciiStr.length < 256) {
+    arr.push(asciiStr.length);
+  } else {
+    throw new Error('ASCIIString exceeded 255 character limit: ' + asciiStr);
+  }
+  for (let i = 0; i < asciiStr.length; i++) {
+    arr.push(asciiStr.charCodeAt(i));
+  }
+  return arr;
 };
 
 /**
@@ -7,41 +21,35 @@ var boundsCheck = function(value) {
  * The first byte will be the length of the string, and the subsequent
  * bytes will be the character codes.
  */
-var write = function(bitStream, value) {
-  var byteArray = convertASCIIStringToByteArray(value);
-
-  for (var i = 0; i < byteArray.length; i++) {
-    bitStream.writeUInt8(byteArray[i]);
+const write = (bitStream, value) => {
+  const byteArray = convertASCIIStringToByteArray(value);
+  for (let i = 0; i < byteArray.length; i++) {
+    const byte = byteArray[i];
+    bitStream.writeUInt8(byte);
   }
 };
 
-var read = function(bitStream) {
-  var length = bitStream.readUInt8();
-  var string = '';
-  for (var i = 0; i < length; i++) {
-    string += String.fromCharCode(bitStream.readUInt8());
+const read = bitStream => {
+  const length = bitStream.readUInt8();
+  let tempStr = '';
+  for (let i = 0; i < length; i++) {
+    tempStr += String.fromCharCode(bitStream.readUInt8());
   }
-  return string;
+  return tempStr;
 };
 
-var countBits = function(string) {
-  var bits = 8; // will represent the string length
-  bits += string.length * 8;
+const countBits = (bitStr: string) => {
+  let bits = 8; // will represent the string length
+  bits += bitStr.length * 8;
   return bits;
 };
 
-var convertASCIIStringToByteArray = function(string) {
-  //console.log('convertASCIIStringToByteArray', string)
-  var arr = [];
-  if (string.length < 256) {
-    arr.push(string.length);
-  } else {
-    throw new Error('ASCIIString exceeded 255 character limit: ' + string);
-  }
-  for (var i = 0; i < string.length; i++) {
-    arr.push(string.charCodeAt(i));
-  }
-  return arr;
+const compare = (a: string, b: string) => {
+  return {
+    a,
+    b,
+    isChanged: a !== b
+  };
 };
 
 /**
@@ -49,22 +57,15 @@ var convertASCIIStringToByteArray = function(string) {
  * the string may be up to 255 characters long
  * uses BitBuffer UInt8 functions for write/read
  */
-var ASCIIString = {
-  boundsCheck: boundsCheck,
+const ASCIIString = {
+  boundsCheck,
   customBits: true,
-  countBits: countBits,
+  countBits,
   customWrite: true,
-  write: write,
+  write,
   customRead: true,
-  read: read
-};
-
-ASCIIString.compare = function(a: string, b: string) {
-  return {
-    a: a,
-    b: b,
-    isChanged: a !== b
-  };
+  read,
+  compare
 };
 
 export default ASCIIString;

@@ -5,7 +5,7 @@ function IdPool(binaryType) {
   this.max = Binary[binaryType].max;
 
   this.pool = [];
-  for (var i = 0; i < this.max; i++) {
+  for (let i = 0; i < this.max; i++) {
     this.pool.push(i);
   }
 
@@ -30,7 +30,7 @@ IdPool.prototype.queueReturnId = function(id) {
 };
 
 IdPool.prototype.update = function() {
-  for (var i = 0; i < this.queue.length; i++) {
+  for (let i = 0; i < this.queue.length; i++) {
     this.returnId(this.queue[i]);
   }
   this.queue = [];

@@ -8,16 +8,16 @@ function EntityCache(config) {
 }
 
 EntityCache.prototype.saveEntity = function(entity, protocol) {
-  //console.log('ENTITY SAVED', entity.id, entity)
-  var copy = copyProxy(entity, protocol);
-  //console.log('copy', copy)
+  // console.log('ENTITY SAVED', entity.id, entity)
+  const copy = copyProxy(entity, protocol);
+  // console.log('copy', copy)
   copy.protocol = entity.protocol;
   this.state[entity[this.config.ID_PROPERTY_NAME]] = copy;
-  //console.log('STATe',this.state[entity.id])
+  // console.log('STATe',this.state[entity.id])
 };
 
 EntityCache.prototype.deleteEntity = function(id) {
-  //console.log('ENTITY DELETED', id)
+  // console.log('ENTITY DELETED', id)
   delete this.state[id];
 };
 
@@ -26,7 +26,7 @@ EntityCache.prototype.updateEntityPartial = function(id, path, value) {
 };
 
 EntityCache.prototype.updateEntityOptimized = function(id, path, deltaValue) {
-  var value = getValue(this.state[id], path);
+  const value = getValue(this.state[id], path);
   setValue(this.state[id], path, value + deltaValue);
 };
 
@@ -35,19 +35,19 @@ EntityCache.prototype.getEntity = function(id) {
 };
 
 EntityCache.prototype.saveSnapshot = function(snapshot, protocols) {
-  //console.log('SAVING', tick)
-  for (var i = 0; i < snapshot.createEntities.length; i++) {
-    var entity = snapshot.createEntities[i];
+  // console.log('SAVING', tick)
+  for (let i = 0; i < snapshot.createEntities.length; i++) {
+    const entity = snapshot.createEntities[i];
     this.saveEntity(entity, entity.protocol);
   }
 
-  for (var i = 0; i < snapshot.updateEntities.partial.length; i++) {
-    var partial = snapshot.updateEntities.partial[i];
+  for (let i = 0; i < snapshot.updateEntities.partial.length; i++) {
+    const partial = snapshot.updateEntities.partial[i];
     this.updateEntityPartial(partial.id, partial.path, partial.value);
   }
 
-  for (var i = 0; i < snapshot.updateEntities.optimized.length; i++) {
-    var optimized = snapshot.updateEntities.optimized[i];
+  for (let i = 0; i < snapshot.updateEntities.optimized.length; i++) {
+    const optimized = snapshot.updateEntities.optimized[i];
     optimized.updates.forEach(microOpt => {
       if (microOpt.isDelta) {
         // deltaValue
@@ -59,8 +59,8 @@ EntityCache.prototype.saveSnapshot = function(snapshot, protocols) {
     });
   }
 
-  for (var i = 0; i < snapshot.deleteEntities.length; i++) {
-    var id = snapshot.deleteEntities[i];
+  for (let i = 0; i < snapshot.deleteEntities.length; i++) {
+    const id = snapshot.deleteEntities[i];
     this.deleteEntity(id);
   }
 };

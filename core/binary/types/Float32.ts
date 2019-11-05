@@ -4,15 +4,16 @@
  */
 import compareFloats from './compare/compareFloats';
 
-var Float32 = {
+const boundsCheck = (value: number) => {
+  return true; // value >= Float32.min && value <= Float32.max
+};
+
+const Float32 = {
   bits: 32,
   compare: compareFloats,
   write: 'writeFloat32',
-  read: 'readFloat32'
-};
-
-Float32.boundsCheck = function(value) {
-  return true; //value >= Float32.min && value <= Float32.max
+  read: 'readFloat32',
+  boundsCheck
 };
 
 export default Float32;

@@ -1,6 +1,6 @@
 import Binary from '../../binary/Binary';
 
-var writeDeleteId = function(bitStream, idType, id) {
+const writeDeleteId = (bitStream, idType, id) => {
   bitStream[Binary[idType].write](id);
 };
 

@@ -1,6 +1,6 @@
-var createOptSchema = function(index, optConfig) {
-  var type = -1;
-  var delta = false;
+const createOptSchema = function(index, optConfig) {
+  let type = -1;
+  let delta = false;
 
   if (typeof optConfig === 'object') {
     type = optConfig.type;
@@ -17,8 +17,8 @@ var createOptSchema = function(index, optConfig) {
 
   return {
     key: index,
-    type: type,
-    delta: delta
+    type,
+    delta
   };
 };
 

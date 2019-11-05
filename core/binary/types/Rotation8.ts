@@ -1,21 +1,21 @@
-var scale = function(n, a, b, c, d) {
+const scale = function(n, a, b, c, d) {
   return ((d - c) * (n - a)) / (b - a) + c;
 };
 
-var write = function(bitStream, value) {
+const write = function(bitStream, value) {
   // no longer write the converted value
   // is there a bug on initial creation?
   bitStream.writeUInt8(value);
 };
 
-var read = function(bitStream) {
-  var rawValue = bitStream.readUInt8();
+const read = function(bitStream) {
+  const rawValue = bitStream.readUInt8();
   return byteToRadians(rawValue);
 };
 
-var compare = function(a, b) {
-  var intA = radiansToByte(a);
-  var intB = radiansToByte(b);
+const compare = function(a, b) {
+  const intA = radiansToByte(a);
+  const intB = radiansToByte(b);
 
   return {
     a: intA,
@@ -24,19 +24,19 @@ var compare = function(a, b) {
   };
 };
 
-var countBits = function() {
+const countBits = function() {
   return 8;
 };
 
-var boundsCheck = function(value) {
+const boundsCheck = function(value) {
   return value >= Rotation8.min && value <= Rotation8.max;
 };
 
-var radiansToByte = function(radians) {
+const radiansToByte = function(radians) {
   return Math.floor(scale(radians, 0, 2 * Math.PI, 0, 255) % 256);
 };
 
-var byteToRadians = function(uint8) {
+const byteToRadians = function(uint8) {
   return uint8 * ((2 * Math.PI) / 255);
 };
 
@@ -49,16 +49,16 @@ var byteToRadians = function(uint8) {
  * @param {Number} ratio Amount to interpolate (0 -> a, 1 -> b, 0.5 -> halfway)
  * @return {Number} Returns the new angle
  */
-var interp = function(a, b, ratio) {
+const interp = function(a, b, ratio) {
   throw new Error(
     'nengi.Rotation8 interpolation is not implemented. Try nengi.RotationFloat32 instead.'
   );
-  //console.log('interp', a, b, ratio)
-  //return interpRot = lerp(a, b, ratio)
-  var PI = Math.PI;
-  var whole = 2 * PI;
-  var quarter = PI / 2;
-  var threeQuarters = (3 * PI) / 2;
+  // console.log('interp', a, b, ratio)
+  // return interpRot = lerp(a, b, ratio)
+  const PI = Math.PI;
+  const whole = 2 * PI;
+  const quarter = PI / 2;
+  const threeQuarters = (3 * PI) / 2;
 
   if (a < quarter && b > threeQuarters) {
     return (interpRot = lerp(a + whole, b, ratio) - whole);
@@ -69,7 +69,7 @@ var interp = function(a, b, ratio) {
   }
 };
 
-var lerp = function(a, b, portion) {
+const lerp = function(a, b, portion) {
   return a + (b - a) * portion;
 };
 
@@ -78,17 +78,17 @@ var lerp = function(a, b, portion) {
  * range: 0 to 255
  * uses BitBuffer functions for write/read
  */
-var Rotation8 = {
+const Rotation8 = {
   min: 0,
   max: 255,
-  interp: interp,
-  boundsCheck: boundsCheck,
-  compare: compare,
+  interp,
+  boundsCheck,
+  compare,
   bits: 8,
   customWrite: true,
-  write: write,
+  write,
   customRead: true,
-  read: read
+  read
 };
 
 export default Rotation8;

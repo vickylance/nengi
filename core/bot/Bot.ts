@@ -9,8 +9,8 @@ import createPongBuffer from '../snapshot/writer/createPongBuffer';
 import Chronus from '../client/Chronus';
 import Outbound from '../client/Outbound';
 
-//const W3CWebSocket = require('websocket').w3cwebsocket
-//const WebSocket = require('ws')
+// const W3CWebSocket = require('websocket').w3cwebsocket
+// const WebSocket = require('ws')
 import { WebSocket } from '@clusterws/cws';
 
 class Bot {
@@ -45,7 +45,7 @@ class Bot {
 
   handleMessage(message) {
     this.totalBytesReceived += message.byteLength;
-    let snapshot = readSnapshotBuffer(
+    const snapshot = readSnapshotBuffer(
       message,
       this.protocols,
       this.config,
@@ -62,7 +62,7 @@ class Bot {
 
     /* ping */
     if (snapshot.pingKey !== -1) {
-      var pongBuffer = createPongBuffer(snapshot.pingKey);
+      const pongBuffer = createPongBuffer(snapshot.pingKey);
       this.websocket.send(pongBuffer.byteArray);
     }
     if (snapshot.avgLatency !== -1) {
@@ -83,7 +83,7 @@ class Bot {
       this.entityCache.deleteEntity(id);
       this.de.push(id);
     });
-    let worldState = new WorldState(
+    const worldState = new WorldState(
       this.serverTick,
       this.tickLength,
       snapshot,
@@ -97,7 +97,7 @@ class Bot {
   }
 
   connect(address, handshake) {
-    this.websocket = new WebSocket(address); //, 'nengi-protocol')
+    this.websocket = new WebSocket(address); // , 'nengi-protocol')
     this.outbound.websocket = this.websocket;
     this.websocket.binaryType = 'arraybuffer';
 
@@ -153,7 +153,7 @@ class Bot {
   }
 
   readNetwork() {
-    let obj = {
+    const obj = {
       latest: [],
       messages: [],
       localMessages: [],
@@ -172,21 +172,21 @@ class Bot {
     this.de = [];
 
     if (this.snapshots[this.snapshots.length - 20]) {
-      //if (this.snapshots[this.snapshots.length - 20].processed) {
+      // if (this.snapshots[this.snapshots.length - 20].processed) {
       this.snapshots.splice(this.snapshots.length - 20, 1);
-      //}
+      // }
     }
     /*
 
         if (this.snapshots[this.snapshots.length - 20]) {
-            //if (this.snapshots[this.snapshots.length-20].processed) {
+            // if (this.snapshots[this.snapshots.length-20].processed) {
             this.snapshots.splice(this.snapshots.length - 20, 1)
             // }
         }
         */
 
-    //console.log('sn', this.snapshots.length)
-    //return this.interp.interp(this.snapshots, Date.now() - 100 - this.chronus.averageTimeDifference)
+    // console.log('sn', this.snapshots.length)
+    // return this.interp.interp(this.snapshots, Date.now() - 100 - this.chronus.averageTimeDifference)
 
     return obj;
   }

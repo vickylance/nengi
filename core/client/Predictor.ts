@@ -85,15 +85,15 @@ class Predictor {
   cleanUp(tick) {
     // let str = ''
     this.predictionFrames.forEach(predictionFrame => {
-      //str += predictionFrame.tick + ' '
-      //console.log(typeof tick, typeof predictionFrame.tick)
+      // str += predictionFrame.tick + ' '
+      // console.log(typeof tick, typeof predictionFrame.tick)
       if (predictionFrame.tick < tick - 50) {
-        //console.log('delete a prediction frame b/c its old')
+        // console.log('delete a prediction frame b/c its old')
         this.predictionFrames.delete(predictionFrame.tick);
       }
     });
 
-    //console.log(str)
+    // console.log(str)
   }
 
   addCustom(tick, entity, props) {
@@ -102,8 +102,8 @@ class Predictor {
       predictionFrame = new PredictionFrame(tick, this.config);
       this.predictionFrames.set(tick, predictionFrame);
     }
-    let proxy = Object.assign({}, entity);
-    //console.log('custom prediction registered', proxy)
+    const proxy = Object.assign({}, entity);
+    // console.log('custom prediction registered', proxy)
     predictionFrame.add(entity[this.config.ID_PROPERTY_NAME], proxy, props, entity.protocol);
   }
 
@@ -113,17 +113,17 @@ class Predictor {
       predictionFrame = new PredictionFrame(tick, this.config);
       this.predictionFrames.set(tick, predictionFrame);
     }
-    let proxy = proxify(entity, entity.protocol);
-    //console.log('auto prediction registered', proxy)
+    const proxy = proxify(entity, entity.protocol);
+    // console.log('auto prediction registered', proxy)
     predictionFrame.add(entity[this.config.ID_PROPERTY_NAME], proxy, props, entity.protocol);
   }
 
   has(tick, nid, prop) {
-    let predictionFrame = this.predictionFrames.get(tick);
+    const predictionFrame = this.predictionFrames.get(tick);
     if (predictionFrame) {
-      let entityPrediction = predictionFrame.entityPredictions.get(nid);
+      const entityPrediction = predictionFrame.entityPredictions.get(nid);
       if (entityPrediction) {
-        //console.log('prediction has', prop, entityPrediction.props.indexOf(prop !== -1))
+        // console.log('prediction has', prop, entityPrediction.props.indexOf(prop !== -1))
         return entityPrediction.props.indexOf(prop) !== -1;
       }
     }
@@ -131,25 +131,25 @@ class Predictor {
   }
 
   getErrors(worldState) {
-    let predictionErrorFrame = new PredictionErrorFrame(worldState.clientTick, this.config);
+    const predictionErrorFrame = new PredictionErrorFrame(worldState.clientTick, this.config);
     if (worldState) {
       // predictions for this frame
-      let predictionFrame = this.predictionFrames.get(worldState.clientTick);
+      const predictionFrame = this.predictionFrames.get(worldState.clientTick);
 
       if (predictionFrame) {
         predictionFrame.entityPredictions.forEach(entityPrediction => {
-          //console.log('ep', entityPrediction)
+          // console.log('ep', entityPrediction)
           // predictions for this entity
-          let nid = entityPrediction[this.config.ID_PROPERTY_NAME];
-          let authoritative = worldState.entities.get(nid);
+          const nid = entityPrediction[this.config.ID_PROPERTY_NAME];
+          const authoritative = worldState.entities.get(nid);
           if (authoritative) {
             entityPrediction.props.forEach(prop => {
               if (!entityPrediction.protocol) {
                 // for backwards compat, nengi 1.0 does not require protocols
                 // on predictions
-                let authValue = authoritative[prop];
-                let predValue = entityPrediction.proxy[prop];
-                let diff = authValue - predValue;
+                const authValue = authoritative[prop];
+                const predValue = entityPrediction.proxy[prop];
+                const diff = authValue - predValue;
 
                 if (!closeEnough(diff)) {
                   predictionErrorFrame.add(
@@ -163,8 +163,8 @@ class Predictor {
                 const type = entityPrediction.protocol.properties[prop].type;
                 if (type === BinaryType.UTF8String || type === BinaryType.ASCIIString) {
                   // provisional, nengi STRING prediction reconiliation
-                  let authValue = authoritative[prop];
-                  let predValue = entityPrediction.proxy[prop];
+                  const authValue = authoritative[prop];
+                  const predValue = entityPrediction.proxy[prop];
 
                   if (authValue !== predValue) {
                     predictionErrorFrame.add(
@@ -181,9 +181,9 @@ class Predictor {
                     );
                   }
                 } else {
-                  let authValue = authoritative[prop];
-                  let predValue = entityPrediction.proxy[prop];
-                  let diff = authValue - predValue;
+                  const authValue = authoritative[prop];
+                  const predValue = entityPrediction.proxy[prop];
+                  const diff = authValue - predValue;
 
                   if (!closeEnough(diff)) {
                     predictionErrorFrame.add(

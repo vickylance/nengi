@@ -5,13 +5,13 @@ import countCommandsBits from './countCommandsBits';
 import writeCommands from './writeCommands';
 
 function createCommandBuffer(tick, commands) {
-  var bits = 0;
+  let bits = 0;
   bits += 8;
   bits += 32;
   bits += countCommandsBits(commands);
 
-  var bitBuffer = new BitBuffer(bits);
-  var bitStream = new BitStream(bitBuffer);
+  const bitBuffer = new BitBuffer(bits);
+  const bitStream = new BitStream(bitBuffer);
 
   bitStream.writeUInt8(Chunk.ClientTick);
   bitStream.writeUInt32(tick);

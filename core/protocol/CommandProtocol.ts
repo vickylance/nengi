@@ -1,5 +1,5 @@
 import Protocol from './Protocol';
-//var config = require('../../config')
+// var config = require('../../config')
 
 function CommandProtocol(schemaConfig, config) {
   schemaConfig[config.TYPE_PROPERTY_NAME] = {
@@ -8,7 +8,7 @@ function CommandProtocol(schemaConfig, config) {
     isArray: false
   };
 
-  var protocol = new Protocol(schemaConfig, config);
+  const protocol = new Protocol(schemaConfig, config);
   protocol.type = 'Command';
 
   return protocol;

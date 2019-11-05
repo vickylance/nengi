@@ -1,13 +1,13 @@
 import getValue from './getValue';
 import setValue from './setValue';
 
-var deproxify = function(proxy, protocol) {
-  var obj = {};
+const deproxify = function(proxy, protocol) {
+  const obj = {};
 
-  for (var i = 0; i < protocol.keys.length; i++) {
-    var prop = protocol.properties[protocol.keys[i]];
-    var value = getValue(proxy, prop.path);
-    //var value = proxy[protocol.keys[i]]
+  for (let i = 0; i < protocol.keys.length; i++) {
+    const prop = protocol.properties[protocol.keys[i]];
+    let value = getValue(proxy, prop.path);
+    // var value = proxy[protocol.keys[i]]
 
     if (typeof value === 'undefined') {
       continue;
@@ -15,8 +15,8 @@ var deproxify = function(proxy, protocol) {
 
     // value is an array of nengi objects
     if (prop.isArray && prop.protocol) {
-      var temp = [];
-      for (var j = 0; j < value.length; j++) {
+      const temp = [];
+      for (let j = 0; j < value.length; j++) {
         temp.push(deproxify(value[j], prop.protocol));
       }
       value = temp;

@@ -7,15 +7,15 @@ function isBatchAtomiclyValid(diffs, schema) {
         return false
     }
 
-    var valid = true
-    var batchContainsChanges = false
+    let valid = true
+    let batchContainsChanges = false
 
     diffs.forEach(diff => {
-        var prop = schema.keys[diff.key]
-        var opt = schema.batch.properties[prop]
+        const prop = schema.keys[diff.key]
+        const opt = schema.batch.properties[prop]
         if (opt) {
-            var binaryType = Binary[opt.type]
-            var value = calculateValue(diff.was, diff.is, opt.delta)
+            const binaryType = Binary[opt.type]
+            const value = calculateValue(diff.was, diff.is, opt.delta)
             if (opt.delta) {
                 if (value !== 0) {
                     batchContainsChanges = true

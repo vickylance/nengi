@@ -1,8 +1,8 @@
 // forked and partial copy of https://github.com/inolen/bit-buffer MIT Lic
 
-var BitBuffer = function(sourceOrLength) {
+const BitBuffer = function(sourceOrLength) {
   this.bitLength = null; // length in bits (can be less than the bytes/8)
-  this.byteLength = null; // length in bytes (atleast enough to hold the bits)
+  this.byteLength = null; // length in bytes (at least enough to hold the bits)
   this.byteArray = null; // Uint8Array holding the underlying bytes
 
   if (typeof sourceOrLength === 'number') {
@@ -35,15 +35,16 @@ var BitBuffer = function(sourceOrLength) {
 // at the bit level.
 BitBuffer._scratch = new DataView(new ArrayBuffer(8));
 
-BitBuffer.concat = function(bitViews) {
-  var bitLength = 0;
-  for (var i = 0; i < bitViews.length; i++) {
-    bitLength += bitViews[i].bitLength;
+BitBuffer.concat = bitViews => {
+  let bitLength = 0;
+  for (let i = 0; i < bitViews.length; i++) {
+    const bitViewItem = bitViews[i];
+    bitLength += bitViewItem.bitLength;
   }
-  var bitView = new BitBuffer(Buffer.allocUnsafe(Math.ceil(bitLength / 8)));
-  var offset = 0;
-  for (var i = 0; i < bitViews.length; i++) {
-    for (var j = 0; j < bitViews[i].bitLength; j++) {
+  const bitView = new BitBuffer(Buffer.allocUnsafe(Math.ceil(bitLength / 8)));
+  let offset = 0;
+  for (let i = 0; i < bitViews.length; i++) {
+    for (let j = 0; j < bitViews[i].bitLength; j++) {
       bitView._setBit(bitViews[i]._getBit(j), offset);
       offset++;
     }
@@ -52,7 +53,7 @@ BitBuffer.concat = function(bitViews) {
 };
 
 BitBuffer.prototype.toBuffer = function() {
-  return this.byteArray; //new Buffer(this.byteArray, this.byteLength)
+  return this.byteArray; // new Buffer(this.byteArray, this.byteLength)
 };
 
 BitBuffer.prototype._getBit = function(offset) {
@@ -68,7 +69,7 @@ BitBuffer.prototype._setBit = function(on, offset) {
 };
 
 BitBuffer.prototype.getBits = function(offset, bits, signed) {
-  var available = this.byteArray.length * 8 - offset;
+  const available = this.byteArray.length * 8 - offset;
 
   if (bits > available) {
     throw new Error(
@@ -76,27 +77,27 @@ BitBuffer.prototype.getBits = function(offset, bits, signed) {
     );
   }
 
-  var value = 0;
-  for (var i = 0; i < bits; ) {
+  let value = 0;
+  for (let i = 0; i < bits; ) {
     /*
-		var read
+    var read
 
-		// Read an entire byte if we can.
-		if ((bits - i) >= 8 && ((offset & 7) === 0)) {
-			value |= (this.byteArray[offset >> 3] << i)
-			read = 8
-		} else {
-			value |= (this._getBit(offset) << i)
-			read = 1
-		}
-		*/
+    // Read an entire byte if we can.
+    if ((bits - i) >= 8 && ((offset & 7) === 0)) {
+      value |= (this.byteArray[offset >> 3] << i)
+      read = 8
+    } else {
+      value |= (this._getBit(offset) << i)
+      read = 1
+    }
+    */
 
-    var remaining = bits - i;
-    var bitOffset = offset & 7;
-    var currentByte = this.byteArray[offset >> 3];
-    var read = Math.min(remaining, 8 - bitOffset);
-    var mask = (1 << read) - 1;
-    var readBits = (currentByte >> bitOffset) & mask;
+    const remaining = bits - i;
+    const bitOffset = offset & 7;
+    const currentByte = this.byteArray[offset >> 3];
+    const read = Math.min(remaining, 8 - bitOffset);
+    const mask = (1 << read) - 1;
+    const readBits = (currentByte >> bitOffset) & mask;
     value |= readBits << i;
 
     offset += read;
@@ -118,7 +119,7 @@ BitBuffer.prototype.getBits = function(offset, bits, signed) {
 };
 
 BitBuffer.prototype.setBits = function(value, offset, bits) {
-  var available = this.byteArray.length * 8 - offset;
+  const available = this.byteArray.length * 8 - offset;
 
   if (bits > available) {
     throw new Error(
@@ -126,8 +127,8 @@ BitBuffer.prototype.setBits = function(value, offset, bits) {
     );
   }
 
-  for (var i = 0; i < bits; ) {
-    var wrote;
+  for (let i = 0; i < bits; ) {
+    let wrote;
 
     // Write an entire byte if we can.
     if (bits - i >= 8 && (offset & 7) === 0) {

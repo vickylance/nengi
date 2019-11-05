@@ -2,20 +2,20 @@ import isBatchAtomiclyValid from './isBatchAtomiclyValid';
 import compare from '../../protocol/compare';
 
 function batchOrSingleProps(oldProxy, newProxy, schema) {
-  var singlePropUpdates = [];
-  var batchedUpdates = [];
-  var diffs = compare(oldProxy, newProxy, schema);
-  //console.log('diffs', diffs)
+  const singlePropUpdates = [];
+  let batchedUpdates = [];
+  const diffs = compare(oldProxy, newProxy, schema);
+  // console.log('diffs', diffs)
 
   // can batch mode be used on these values?
-  var batchable = isBatchAtomiclyValid(diffs, schema);
+  const batchable = isBatchAtomiclyValid(diffs, schema);
 
   // is there any overlap between diffs and the batchable properties?
-  var useBatch = false;
+  let useBatch = false;
   if (schema.hasOptimizations) {
-    for (var i = 0; i < diffs.length; i++) {
-      var diff = diffs[i];
-      var opt = schema.batch.properties[diff.prop];
+    for (let i = 0; i < diffs.length; i++) {
+      const diff = diffs[i];
+      const opt = schema.batch.properties[diff.prop];
 
       if (opt) {
         useBatch = true;
@@ -23,10 +23,10 @@ function batchOrSingleProps(oldProxy, newProxy, schema) {
     }
   }
 
-  for (var i = 0; i < diffs.length; i++) {
-    var diff = diffs[i];
+  for (let i = 0; i < diffs.length; i++) {
+    const diff = diffs[i];
 
-    var optimization = null;
+    let optimization = null;
     if (schema.hasOptimizations) {
       optimization = schema.batch.properties[diff.prop];
     }
@@ -47,12 +47,12 @@ function batchOrSingleProps(oldProxy, newProxy, schema) {
     });
   }
 
-  var foo = {
-    batchedUpdates: batchedUpdates,
-    singlePropUpdates: singlePropUpdates,
-    diffs: diffs
+  const foo = {
+    batchedUpdates,
+    singlePropUpdates,
+    diffs
   };
-  //console.log('foo', foo)
+  // console.log('foo', foo)
 
   return foo;
 }

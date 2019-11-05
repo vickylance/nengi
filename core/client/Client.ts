@@ -12,6 +12,36 @@ import Predictor from './Predictor';
 import { EventEmitter } from 'events';
 
 class Client extends EventEmitter {
+  config;
+  protocols;
+  interpDelay;
+  connectionOpen;
+  connectionClose;
+  websocket;
+  outbound;
+  chronus;
+  entityCache;
+  interpolator;
+  snapshots;
+  latestWorldState;
+  serverTick: number;
+  tickLength: number;
+  cr: any[];
+  up: any[];
+  de: any[];
+  averagePing: number;
+  pings: any[];
+  timeDifference: number;
+  timeDifferences: number[];
+  avgDiff: number;
+  avgDiffs: number[];
+  messages: any[];
+  localMessages: any[];
+  jsons: any[];
+  predictionErrors: any[];
+  predictions: any;
+  predictor: Predictor;
+
   constructor(config, interpDelay) {
     super();
     this.config = config;
@@ -74,7 +104,7 @@ class Client extends EventEmitter {
   }
 
   handleMessage(message) {
-    let snapshot = readSnapshotBuffer(
+    const snapshot = readSnapshotBuffer(
       message.data,
       this.protocols,
       this.config,
@@ -91,7 +121,7 @@ class Client extends EventEmitter {
 
     /* ping */
     if (snapshot.pingKey !== -1) {
-      var pongBuffer = createPongBuffer(snapshot.pingKey);
+      const pongBuffer = createPongBuffer(snapshot.pingKey);
       this.websocket.send(pongBuffer.byteArray);
     }
     if (snapshot.avgLatency !== -1) {
@@ -117,9 +147,9 @@ class Client extends EventEmitter {
       this.de.push(id);
     });
 
-    //console.log('snapshot', this.averagePing, this.avgDiff, snapshot.createEntities.length, snapshot.updateEntities.partial.length, snapshot.deleteEntities.length)
+    // console.log('snapshot', this.averagePing, this.avgDiff, snapshot.createEntities.length, snapshot.updateEntities.partial.length, snapshot.deleteEntities.length)
 
-    let worldState = new WorldState(
+    const worldState = new WorldState(
       this.serverTick,
       this.tickLength,
       snapshot,
@@ -132,14 +162,14 @@ class Client extends EventEmitter {
 
     this.latestWorldState = worldState;
     // TODO unconfirmed commands
-    //console.log('investigating', worldState.clientTick)
-    let predictionErrorFrame = this.predictor.getErrors(worldState);
+    // console.log('investigating', worldState.clientTick)
+    const predictionErrorFrame = this.predictor.getErrors(worldState);
     if (predictionErrorFrame.entities.size > 0) {
       this.predictionErrors.push(predictionErrorFrame);
     }
 
     this.predictor.cleanUp(worldState.clientTick);
-    // console.log('predictionERrors', this.predictionErrors.length)
+    // console.log('predictionErrors', this.predictionErrors.length)
 
     this.snapshots.push(worldState);
     this.serverTick++;
@@ -219,11 +249,11 @@ class Client extends EventEmitter {
       }
     }
 
-    //console.log('this.chronus.averageTimeDifference', this.chronus.averageTimeDifference)
+    // console.log('this.chronus.averageTimeDifference', this.chronus.averageTimeDifference)
 
-    //console.log('t', this.snapshots.length)
+    // console.log('t', this.snapshots.length)
 
-    let obj = this.interpolator.interp(
+    const obj = this.interpolator.interp(
       this.snapshots,
       Date.now() - this.interpDelay - this.chronus.averageTimeDifference,
       this.predictor

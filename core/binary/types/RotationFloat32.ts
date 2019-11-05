@@ -10,8 +10,8 @@ const countBits = function() {
 };
 
 const lerpRot = function(a, b, amount) {
-  let s = (1 - amount) * Math.sin(a) + amount * Math.sin(b);
-  let c = (1 - amount) * Math.cos(a) + amount * Math.cos(b);
+  const s = (1 - amount) * Math.sin(a) + amount * Math.sin(b);
+  const c = (1 - amount) * Math.cos(a) + amount * Math.cos(b);
   return Math.atan2(s, c);
 };
 
@@ -24,9 +24,9 @@ const RotationFloat32 = {
   compare: compareFloats,
   bits: 32,
   customWrite: true,
-  write: write,
+  write,
   customRead: true,
-  read: read
+  read
 };
 
 export default RotationFloat32;

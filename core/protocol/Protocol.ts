@@ -3,7 +3,7 @@ import createOptSchema from './createOptSchema';
 import selectUIntType from './selectUIntType';
 
 function Protocol(schemaConfig, config, optSchemaConfig, components, throwOnAdvancedTypes) {
-  //console.log('creating protocol from', schemaConfig, throwOnAdvancedTypes)
+  // console.log('creating protocol from', schemaConfig, throwOnAdvancedTypes)
   this.metaType = 'protocol';
   this.type = 'basic';
   this.properties = {};
@@ -11,7 +11,7 @@ function Protocol(schemaConfig, config, optSchemaConfig, components, throwOnAdva
 
   this.hasOptimizations = false;
 
-  var arr = [];
+  const arr = [];
   if (schemaConfig[config.TYPE_PROPERTY_NAME]) {
     arr.push(config.TYPE_PROPERTY_NAME);
   }
@@ -19,19 +19,19 @@ function Protocol(schemaConfig, config, optSchemaConfig, components, throwOnAdva
     arr.push(config.ID_PROPERTY_NAME);
   }
 
-  for (var prop in schemaConfig) {
+  for (const prop in schemaConfig) {
     if (prop !== config.TYPE_PROPERTY_NAME && prop !== config.ID_PROPERTY_NAME) {
       arr.push(prop);
     }
   }
-  //arr.sort(propSort)
+  // arr.sort(propSort)
 
   this.keyType = selectUIntType(arr.length);
 
-  for (var i = 0; i < arr.length; i++) {
-    var prop = arr[i];
+  for (let i = 0; i < arr.length; i++) {
+    const prop = arr[i];
 
-    var propConfig = schemaConfig[prop];
+    const propConfig = schemaConfig[prop];
 
     this.properties[prop] = createPropSchema(i, propConfig, throwOnAdvancedTypes);
     this.keys.push(prop);
@@ -52,19 +52,19 @@ function Protocol(schemaConfig, config, optSchemaConfig, components, throwOnAdva
   }
 
   if (typeof optSchemaConfig !== 'undefined') {
-    var batch = {};
+    const batch = {};
     batch.properties = {};
     batch.keys = [];
 
-    var arr2 = [];
-    for (var prop in optSchemaConfig) {
+    const arr2 = [];
+    for (const prop in optSchemaConfig) {
       arr2.push(prop);
     }
 
-    for (var i = 0; i < arr2.length; i++) {
-      var prop = arr2[i];
+    for (let i = 0; i < arr2.length; i++) {
+      const prop = arr2[i];
 
-      var optConfig = optSchemaConfig[prop];
+      const optConfig = optSchemaConfig[prop];
 
       batch.properties[prop] = createOptSchema(i, optConfig);
       batch.keys.push(prop);
@@ -95,7 +95,7 @@ function Protocol(schemaConfig, config, optSchemaConfig, components, throwOnAdva
     this.components = false;
   }
 
-  //console.log(this)
+  // console.log(this)
 }
 
 export default Protocol;

@@ -1,8 +1,8 @@
 import Binary from '../../binary/Binary';
 import BinaryType from '../../binary/BinaryType';
 
-var writeProp = function(bitStream, type, arrayIndexType, value) {
-  var binaryMeta = Binary[type];
+const writeProp = function(bitStream, type, arrayIndexType, value) {
+  const binaryMeta = Binary[type];
 
   if (binaryMeta.customWrite) {
     binaryMeta.write(bitStream, value);

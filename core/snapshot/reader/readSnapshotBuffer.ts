@@ -14,7 +14,7 @@ import readTransfer from './readTransfer';
 import readConnectionResponse from './readConnectionResponse';
 import readEngineMessages from './readEngineMessages';
 
-//var config = require('../../../config')
+// var config = require('../../../config')
 
 import { Chunk } from '../Chunk';
 
@@ -28,12 +28,12 @@ function readSnapshotBuffer(
   transferCallback,
   protocolResolver
 ) {
-  var bitBuffer = new BitBuffer(arrayBuffer);
-  var bitStream = new BitStream(bitBuffer);
+  const bitBuffer = new BitBuffer(arrayBuffer);
+  const bitStream = new BitStream(bitBuffer);
 
-  //console.log(bitStream)
+  // console.log(bitStream)
 
-  var snapshot = {
+  const snapshot = {
     tick: 0,
     clientTick: -1,
 
@@ -80,80 +80,80 @@ function readSnapshotBuffer(
     }
   };
 
-  //var timestamp = bitStream.readFloat64()
-  //console.log(Date.now() - timestamp)
-  //snapshot.timestamp = timestamp
-  //snapshot.clientTick = bitStream.readUInt32()
+  // var timestamp = bitStream.readFloat64()
+  // console.log(Date.now() - timestamp)
+  // snapshot.timestamp = timestamp
+  // snapshot.clientTick = bitStream.readUInt32()
 
-  //console.log('+==================================+')
+  // console.log('+==================================+')
   while (bitStream.offset + 16 <= bitBuffer.bitLength) {
-    //console.log('while', bitStream.offset, bitBuffer.bitLength)
-    var msgType = bitStream.readUInt8();
-    //console.log(msgType, ChunkReverse[msgType])
+    // console.log('while', bitStream.offset, bitBuffer.bitLength)
+    const msgType = bitStream.readUInt8();
+    // console.log(msgType, ChunkReverse[msgType])
 
     switch (msgType) {
       case Chunk.Engine:
-        var engineMessages = readEngineMessages(bitStream, protocols, config);
+        const engineMessages = readEngineMessages(bitStream, protocols, config);
         snapshot.engineMessages = engineMessages;
         break;
       case Chunk.ClientTick:
         snapshot.clientTick = bitStream.readUInt32();
         break;
       case Chunk.Ping:
-        var pingKey = readPing(bitStream);
+        const pingKey = readPing(bitStream);
         snapshot.pingKey = pingKey;
         break;
       case Chunk.Timesync:
-        var times = readTimesync(bitStream);
-        //console.log('READ Timesync', times)
+        const times = readTimesync(bitStream);
+        // console.log('READ Timesync', times)
         snapshot.timestamp = times.time;
         snapshot.avgLatency = times.avgLatency;
         break;
       case Chunk.CreateEntities:
-        var entities = readMessages(bitStream, protocols, config);
-        //console.log('READ ENTITIES', entities)
+        const entities = readMessages(bitStream, protocols, config);
+        // console.log('READ ENTITIES', entities)
         snapshot.createEntities = entities;
         break;
       case Chunk.UpdateEntitiesPartial:
-        var singleProps = readSingleProps(bitStream, protocolResolver, config);
-        //console.log('SINGLE PROPS', singleProps)
+        const singleProps = readSingleProps(bitStream, protocolResolver, config);
+        // console.log('SINGLE PROPS', singleProps)
         snapshot.updateEntities.partial = singleProps;
         break;
       case Chunk.UpdateEntitiesOptimized:
-        var batches = readBatches(bitStream, protocolResolver);
-        //console.log('BATCHES', batches)
+        const batches = readBatches(bitStream, protocolResolver);
+        // console.log('BATCHES', batches)
         snapshot.updateEntities.optimized = batches;
         break;
       case Chunk.DeleteEntities:
-        var deleteEntities = readDeleteEntities(bitStream, config);
-        //console.log('DeleteEntities', deleteEntities)
+        const deleteEntities = readDeleteEntities(bitStream, config);
+        // console.log('DeleteEntities', deleteEntities)
         snapshot.deleteEntities = deleteEntities;
         break;
       case Chunk.LocalEvents:
-        //console.log('prot', protocols)
-        var localEvents = readMessages(bitStream, protocols, config);
+        // console.log('prot', protocols)
+        const localEvents = readMessages(bitStream, protocols, config);
         snapshot.localMessages = localEvents;
         break;
       case Chunk.Messages:
-        var messages = readMessages(bitStream, protocols, config);
+        const messages = readMessages(bitStream, protocols, config);
         snapshot.messages = messages;
         break;
       case Chunk.JSONs:
-        var jsons = readJSONs(bitStream);
+        const jsons = readJSONs(bitStream);
         snapshot.jsons = jsons;
         break;
       case Chunk.ConnectionResponse:
-        var response = readConnectionResponse(bitStream);
+        const response = readConnectionResponse(bitStream);
         connectCallback(response);
         return; // exit this code! not a normal snapshot
       default:
         break;
     }
   }
-  //console.log('ss',snapshot)
+  // console.log('ss',snapshot)
   // entityCache.saveSnapshot(snapshot)
 
-  return snapshot; //simplifySnapshot(snapshot, entityCache)
+  return snapshot; // simplifySnapshot(snapshot, entityCache)
 }
 
 export default readSnapshotBuffer;

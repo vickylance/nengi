@@ -2,7 +2,7 @@ import { Chunk } from '../Chunk';
 import BinaryType from '../../binary/BinaryType';
 import Binary from '../../binary/Binary';
 import writeDeleteId from '../../protocol/write/writeDeleteId';
-//var config = require('../../../config')
+// var config = require('../../../config')
 
 function writeDeleteEntities(chunkType, bitStream, ids, config) {
   if (ids.length > 0) {

@@ -25,7 +25,7 @@ Writer.prototype.proxify = function(tick, entity, schema) {
   if (this.proxyCache[tick].entities[entity.id]) {
     return this.proxyCache[tick].entities[entity.id];
   } else {
-    var proxy = proxify(entity, schema);
+    const proxy = proxify(entity, schema);
     this.proxyCache[tick].entities[entity.id] = proxy;
     return proxy;
   }
@@ -45,20 +45,20 @@ Writer.prototype.write = function(snapshot, client) {
     updateEntities: entityVision.stillVisible,
     deleteEntities: entityVision.noLongerVisible
     */
-  var bct = Binary[chunkType];
+  const bct = Binary[chunkType];
 
-  var defaultUpdates = [];
-  var optimizedUpdates = [];
+  const defaultUpdates = [];
+  const optimizedUpdates = [];
 
-  var bits = 0;
+  let bits = 0;
 
   // TODO separate into testable chunks
   if (snapshot.createEntities.length > 0) {
     bits += bct.bits;
     bits += Binary[BinaryType.UInt8].bits;
     snapshot.createEntities.forEach(id => {
-      var entity = this.instance.getEntity(id);
-      var proxy = this.instance.proxify(snapshot.tick, entity, entity.protocol);
+      const entity = this.instance.getEntity(id);
+      const proxy = this.instance.proxify(snapshot.tick, entity, entity.protocol);
       bits += countEntityBits(proxy, entity.protocol);
     });
   }
@@ -83,21 +83,21 @@ Writer.prototype.write = function(snapshot, client) {
     bits += bct.bits;
     bits += Binary[BinaryType.UInt8].bits;
     snapshot.deleteEntities.forEach(id => {
-      var entity = this.instance.getEntity(id);
+      const entity = this.instance.getEntity(id);
       bits += countDeleteBits(entity.protocol.properties[entity.protocol.keys[1]].type);
     });
   }
 
-  //var buffer = new Buffer(256)
-  var bitBuffer = new BitBuffer(bits);
-  var bitStream = new BitStream(bitBuffer);
+  // var buffer = new Buffer(256)
+  const bitBuffer = new BitBuffer(bits);
+  const bitStream = new BitStream(bitBuffer);
 
   if (snapshot.createEntities.length > 0) {
     bitStream[bct.write](Chunk.CreateEntities);
     bitStream[Binary[BinaryType.UInt8].write](snapshot.createEntities.length);
     snapshot.createEntities.forEach(id => {
-      var entity = this.instance.getEntity(id);
-      var proxy = this.instance.proxify(snapshot.tick, entity, entity.protocol);
+      const entity = this.instance.getEntity(id);
+      const proxy = this.instance.proxify(snapshot.tick, entity, entity.protocol);
       writeEntity(bitStream, proxy, entity.protocol);
       client.entityCache.saveEntity(proxy);
     });
@@ -110,7 +110,7 @@ Writer.prototype.write = function(snapshot, client) {
     snapshot.updateEntities.partial.forEach(partialUpdate => {
       console.log('partialUpdate', partialUpdate);
       writePartial(bitStream, partialUpdate);
-      //client.entityCache.updateEntityPartial(partialUpdate.id, partial.prop, partial.)
+      // client.entityCache.updateEntityPartial(partialUpdate.id, partial.prop, partial.)
     });
   }
 
@@ -121,7 +121,7 @@ Writer.prototype.write = function(snapshot, client) {
     snapshot.updateEntities.optimized.forEach(optimizedUpdate => {
       console.log('writing opt', optimizedUpdate);
       writeOptimized(bitStream, optimizedUpdate);
-      //client.entityCache.updateEntityOptimized(optimizedUpdate)
+      // client.entityCache.updateEntityOptimized(optimizedUpdate)
     });
   }
 
@@ -129,7 +129,7 @@ Writer.prototype.write = function(snapshot, client) {
     bitStream[bct.write](Chunk.DeleteEntities);
     bitStream[Binary[BinaryType.UInt8].write](snapshot.deleteEntities.length);
     snapshot.deleteEntities.forEach(id => {
-      var entity = this.instance.getEntity(id);
+      const entity = this.instance.getEntity(id);
       writeDelete(bitStream, entity.protocol.properties[entity.protocol.keys[1]].type, id);
       client.entityCache.forget(id);
     });

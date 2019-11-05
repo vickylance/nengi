@@ -1,5 +1,5 @@
 import Protocol from './Protocol';
-//var config = require('../../config')
+// var config = require('../../config')
 
 function EntityProtocol(schemaConfig, config, components) {
   schemaConfig[config.TYPE_PROPERTY_NAME] = {
@@ -24,7 +24,7 @@ function EntityProtocol(schemaConfig, config, components) {
     }
     */
 
-  var protocol = new Protocol(schemaConfig, config, null, components, true);
+  const protocol = new Protocol(schemaConfig, config, null, components, true);
   protocol.type = 'Entity';
 
   return protocol;
