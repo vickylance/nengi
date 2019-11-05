@@ -105,7 +105,6 @@ describe('end to end mock, client', () => {
             //console.log(client.readNetwork())
         //}, 1/60)
 
- 
         /*
         const clEntity = snapshot.entities[0].createEntities[0]
         delete clEntity.protocol
